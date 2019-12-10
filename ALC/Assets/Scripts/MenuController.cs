@@ -7,16 +7,18 @@ public class MenuController : MonoBehaviour
 {
     public GameObject mainMenu;
     public GameObject options;
-    private bool optionState;
+
+
+    private bool _optionState;
 
     private void Start()
     {
-        optionState = false;
+        _optionState = false;
     }
 
     private void Update()
     {
-        if (optionState)
+        if (_optionState)
         {
             options.SetActive(true);
             mainMenu.SetActive(false);
@@ -33,11 +35,11 @@ public class MenuController : MonoBehaviour
     }
 
     public void BackToMainMenu() {
-        optionState = false;
+        _optionState = false;
     }
 
     public void GameOptions() {
-        optionState = true;
+        _optionState = true;
     }
 
     public void GameQuit() {
