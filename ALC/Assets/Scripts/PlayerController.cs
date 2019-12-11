@@ -5,9 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider))]
 
 public class PlayerController : MonoBehaviour
-{
-    public GameObject bulletProj;
-    public GameObject bulletTransform;
+{ 
     public float speed = 10.0f;
     public float gravity = 20.0f;
     public float maxVelocityChange = 10.0f;
@@ -27,6 +25,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        Movement();
+        RotationToCursor();
+    }
+
+    void RotationToCursor() {
         cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(cameraRay, out cameraRayHit))
         {
@@ -34,28 +37,23 @@ public class PlayerController : MonoBehaviour
             {
                 Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
                 transform.LookAt(targetPosition);
-                Debug.DrawLine(transform.position, targetPosition, Color.red);
-                if (Input.GetMouseButtonDown(0))
-                {
-            
-                    GameObject bullet = Instantiate(bulletProj, bulletTransform.transform.position, Quaternion.identity) as GameObject;
-                    bullet.transform.LookAt(targetPosition);
-                    //bullet.GetComponent<Rigidbody>().AddForce(targetPosition * 200);
-                }
+                //Debug.DrawLine(transform.position, targetPosition, Color.red);
             }
         }
+    }
 
+    void Movement() {
         if (grounded)
-        {         
-           Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-           targetVelocity *= speed;
-           Vector3 velocity = GetComponent<Rigidbody>().velocity;
-           Vector3 velocityChange = (targetVelocity - velocity);
-           velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-           velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-           velocityChange.y = 0;
-           GetComponent<Rigidbody>().AddForce(velocityChange, ForceMode.VelocityChange);
-    
+        {
+            Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            targetVelocity *= speed;
+            Vector3 velocity = GetComponent<Rigidbody>().velocity;
+            Vector3 velocityChange = (targetVelocity - velocity);
+            velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+            velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+            velocityChange.y = 0;
+            GetComponent<Rigidbody>().AddForce(velocityChange, ForceMode.VelocityChange);
+
             if (canJump && Input.GetButton("Jump"))
             {
                 GetComponent<Rigidbody>().velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
@@ -64,11 +62,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<Rigidbody>().AddForce(new Vector3(0, -gravity * GetComponent<Rigidbody>().mass, 0));
         grounded = false;
 
-       
-
-
     }
-
 
     void OnCollisionStay()
     {
