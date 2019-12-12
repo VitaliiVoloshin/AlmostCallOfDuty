@@ -11,8 +11,8 @@ public enum Wtype
 
 public class WeaponController : MonoBehaviour
 {
-    public int selectedWeapon = 0;
-    public Wtype getType;
+    private int selectedWeapon = 0;
+    public Weapon activeWeapon;
     // Start is called before the first frame update
     void Start()
     {
@@ -59,7 +59,7 @@ public class WeaponController : MonoBehaviour
             if (i == selectedWeapon)
             {
                 weapon.gameObject.SetActive(true);
-                getType = weapon.GetComponent<Weapon>().weaponType; 
+                activeWeapon = weapon.GetComponent<Weapon>();
 
             }
             else {

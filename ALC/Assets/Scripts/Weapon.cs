@@ -6,32 +6,31 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    public Wtype weaponType;
-    public int howManyBullets;
-    public int range;
-    public int spreading;
+    [SerializeField]
+    public WeaponData _weaponData;
 
-    // Start is called before the first frame update
+    public float _spread;
+    public float _speed;
+
     void Start()
     {
-        if (weaponType == Wtype.shotgun) {
-            howManyBullets = Random.Range(2, 8);
-        }
-        if (weaponType == Wtype.auto)
-        {
-            howManyBullets = 1;
-        }
-        if (weaponType == Wtype.pistol)
-        {
-            howManyBullets = 1;
-        }
+        _spread = GetSpredingDegree(_weaponData.ShootingRange,_weaponData.Spreading);
+        _speed = NormilizedShootingSpeed(_weaponData.ShotsPerSecond);
+        Debug.Log("weaponInit");
     }
 
-    // Update is called once per frame
-    void Update()
+
+    float GetSpredingDegree(int range, int spreading)
     {
-        
+        return 180 - 2 * Mathf.Rad2Deg * Mathf.Atan(range * 2 / spreading);
     }
 
+    float NormilizedShootingSpeed(float speed)
+    {
+        return 1 / speed;
+    }
 
+    public void Shoot() {
+        GetComponentInChildren<ShootLogic>().Shoot();
+    }
 }

@@ -4,30 +4,64 @@ using UnityEngine;
 
 public class ShootLogic : MonoBehaviour
 {
-    public Vector3 shootLenght;
-    public Vector3 shootLeftSide;
-    public Vector3 shootRightSide;
-    public int range;
-    public int spreading;
     private Weapon weapon;
-    // Start is called before the first frame update
+    public float speed; 
+    public float nextFire;
+    public int howManyBullets;
+    public GameObject bullet;
+
+
     void Start()
     {
         weapon = GetComponentInParent<Weapon>();
-        range = weapon.range;
-        spreading = weapon.spreading;
-
+        nextFire = 0;
+        speed = weapon._speed;
+        howManyBullets = weapon._weaponData.BulletsPerShoot;
     }
-
-    // Update is called once per frame
     void Update()
     {
-        shootLenght = transform.forward * range;
-        //
-        shootRightSide = transform.forward * range;
-
-        Debug.DrawRay(transform.position, shootLenght , Color.green);
-        Debug.DrawRay(transform.position, shootLeftSide, Color.red) ;
-        Debug.DrawRay(transform.position, shootRightSide, Color.blue);
+         
     }
+
+    public void Shoot()
+    {
+
+        if (Time.time > nextFire) { 
+                speed = weapon._speed;
+            howManyBullets = weapon._weaponData.BulletsPerShoot;
+
+            while (howManyBullets != 0)
+            {
+                RaycastHit hit;
+                Vector3 randomDirection = RandomRayPoint(weapon._spread, weapon._weaponData.ShootingRange);
+
+                Vector3 position = transform.position;
+                GameObject newBullet = Instantiate(bullet, position, transform.rotation) as GameObject;
+
+                Bullet bull = newBullet.GetComponent<Bullet>();
+                bull.Direction = randomDirection;
+
+                if (Physics.Raycast(transform.position, randomDirection, out hit))
+                {
+                    Debug.Log(hit.transform.name);
+                    PlayerController pc = hit.transform.GetComponent<PlayerController>();
+                    pc.TakeDamage(weapon._weaponData.Damage);
+
+                }
+                Debug.DrawRay(transform.position, RandomRayPoint(weapon._spread, weapon._weaponData.ShootingRange), Color.yellow, 1);
+                howManyBullets--;
+            }
+            nextFire = Time.time + speed;
+        }
+    }
+
+    Vector3 RandomRayPoint(float spread, int range) 
+    {
+        float degree = Random.Range(-spread/2, spread/2);
+        Quaternion angle = Quaternion.AngleAxis(degree, new Vector3(0, 1, 0));
+        return angle * transform.forward * range;
+    }
+
 }
+
+

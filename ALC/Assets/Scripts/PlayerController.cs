@@ -12,13 +12,15 @@ public class PlayerController : MonoBehaviour
     public bool canJump = true;
     public float jumpHeight = 2.0f;
     private bool grounded = false;
+    public int hp;
+
 
     Ray cameraRay;             
     RaycastHit cameraRayHit;
 
     void Awake()
     {
-
+        hp = 1000;
         GetComponent<Rigidbody>().freezeRotation = true;
         GetComponent<Rigidbody>().useGravity = false;
     }
@@ -27,6 +29,12 @@ public class PlayerController : MonoBehaviour
     {
         Movement();
         RotationToCursor();
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+
+            GetComponentInChildren<WeaponController>().activeWeapon.Shoot();
+        }
+
     }
 
     void RotationToCursor() {
@@ -77,5 +85,9 @@ public class PlayerController : MonoBehaviour
     float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
     {
         return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
+    }
+
+    public void TakeDamage(int damage) {
+        hp -= 10;
     }
 }

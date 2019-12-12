@@ -7,7 +7,7 @@ public class MenuController : MonoBehaviour
 {
     public GameObject mainMenu;
     public GameObject options;
-
+    
 
     private bool _optionState;
 
