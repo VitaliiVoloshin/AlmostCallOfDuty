@@ -44,9 +44,13 @@ public class ShootLogic : MonoBehaviour
                 if (Physics.Raycast(transform.position, randomDirection, out hit))
                 {
                     Debug.Log(hit.transform.name);
-                    PlayerController pc = hit.transform.GetComponent<PlayerController>();
-                    pc.TakeDamage(weapon._weaponData.Damage);
-
+                    if (hit.transform.GetComponent<PlayerController>()) {
+                        hit.transform.GetComponent<PlayerController>().TakeDamage(weapon._weaponData.Damage);
+                    }
+                    if (hit.transform.GetComponent<ManekenController>())
+                    {
+                        hit.transform.GetComponent<ManekenController>().TakeDamage(weapon._weaponData.Damage);
+                    }        
                 }
                 Debug.DrawRay(transform.position, RandomRayPoint(weapon._spread, weapon._weaponData.ShootingRange), Color.yellow, 1);
                 howManyBullets--;

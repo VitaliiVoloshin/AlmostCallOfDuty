@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class ManekenController : MonoBehaviour
 {
+
+    public int hp;
     // Start is called before the first frame update
     void Start()
     {
-       
+        hp = 100;
     }
     private void Update()
     {
         GetComponentInChildren<WeaponController>().activeWeapon.Shoot();
+
+        if (hp <= 0) {
+            Destroy(gameObject);
+        }
     }
 
-    // Update is called once per frame
+    public void TakeDamage(int damage) {
+        hp -= damage;
+    }
 }

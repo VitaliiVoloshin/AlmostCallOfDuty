@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        hp = 1000;
+        hp = 100;
         GetComponent<Rigidbody>().freezeRotation = true;
         GetComponent<Rigidbody>().useGravity = false;
     }
@@ -31,8 +31,11 @@ public class PlayerController : MonoBehaviour
         RotationToCursor();
         if (Input.GetKey(KeyCode.Mouse0))
         {
-
             GetComponentInChildren<WeaponController>().activeWeapon.Shoot();
+        }
+
+        if (hp <= 0) {
+            Destroy(gameObject);
         }
 
     }
@@ -88,6 +91,6 @@ public class PlayerController : MonoBehaviour
     }
 
     public void TakeDamage(int damage) {
-        hp -= 10;
+        hp -= damage;
     }
 }
