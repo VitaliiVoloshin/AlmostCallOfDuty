@@ -28,7 +28,7 @@ public class ShootLogic : MonoBehaviour
 
         if (Time.time > nextFire) { 
                 speed = weapon._speed;
-            howManyBullets = weapon._weaponData.BulletsPerShoot;
+                howManyBullets = weapon._weaponData.BulletsPerShoot;
 
             while (howManyBullets != 0)
             {
