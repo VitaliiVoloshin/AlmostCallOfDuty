@@ -4,34 +4,67 @@ using UnityEngine;
 
 public class UnitHolder : MonoBehaviour
 {
-    public PlayerController []players;
-    public ManekenController[]manekens;
-    public GameObject[] all;
+    public List<PlayerController> players;
+    public List<ManekenController> manekens;
+
+    private Vector3[] manekensPos;
+    private Quaternion[] manekensRot;
+    private bool m_manekensClone;
     // Start is called before the first frame update
     void Start()
-    { all = new GameObject[10];
-       players = FindObjectsOfType<PlayerController>();
-       manekens = FindObjectsOfType<ManekenController>();
-       all = new GameObject[players.Length + manekens.Length];
-        int i = 0;
+    { 
+        players.AddRange(FindObjectsOfType<PlayerController>());
+        manekens.AddRange(FindObjectsOfType<ManekenController>());
+        GetShit();
+        manekensPos = new Vector3[manekens.Count];
+        manekensRot = new Quaternion[manekens.Count];
 
-        foreach (PlayerController unit in players) {
-            all[i] = unit.gameObject;
-            all[i].transform.parent = transform;
+        int i = 0;
+        foreach (ManekenController boi in manekens) {
+            if (boi != null) {
+            manekensPos[i] = boi.transform.position;
+            manekensRot[i] = boi.transform.rotation;
+            
+            }
             i++;
         }
+    }
 
+    private void Update()
+    {
+        int i = 0;
+        /*foreach (ManekenController unit in manekens) {
+            if (unit == null) {
+                Debug.Log(manekensPos[i] + " + " + manekensRot[i]);
+                GameObject tempunit = Instantiate(Resources.Load("AutoRifleManeken"),manekensPos[i],manekensRot[i]) as GameObject;
+                tempunit.transform.parent = transform;
+                manekens[i] = tempunit.GetComponent<ManekenController>();
+            }
+            i++;
+        }*/
+
+        while (i <= manekens.Count-1) {
+            if (manekens[i] == null)
+            {
+                Debug.Log(manekensPos[i] + " + " + manekensRot[i]);
+                GameObject tempunit = Instantiate(Resources.Load("AutoRifleManeken"), manekensPos[i], manekensRot[i]) as GameObject;
+                tempunit.transform.parent = transform;
+                manekens[i] = tempunit.GetComponent<ManekenController>();
+            }
+            i++;
+        }
+    }
+
+
+    void GetShit() {
+        foreach (PlayerController unit in players)
+        {
+            unit.transform.parent = transform;
+        }
         foreach (ManekenController unit in manekens)
         {
-            all[i] = unit.gameObject;
-            all[i].transform.parent = transform;
-            i++;
+            unit.transform.parent = transform;
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

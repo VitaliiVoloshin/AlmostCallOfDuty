@@ -15,7 +15,7 @@ MonoBehaviour:
   _identificator: shotgun
   _shotsPerSecond: 1
   _reloadSpeed: 4
-  _damage: 5
+  _damage: 20
   _bulletsPerShoot: 6
   _shootingRange: 20
   _spreading: 10

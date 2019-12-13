@@ -12,7 +12,9 @@ public class PlayerController : MonoBehaviour
     public bool canJump = true;
     public float jumpHeight = 2.0f;
     private bool grounded = false;
+
     public int hp;
+    private 
 
 
     Ray cameraRay;             
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         hp = 100;
+
         GetComponent<Rigidbody>().freezeRotation = true;
         GetComponent<Rigidbody>().useGravity = false;
     }
@@ -35,7 +38,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (hp <= 0) {
-            Destroy(gameObject);
+            Destroy(gameObject);        
         }
 
     }
