@@ -6,41 +6,66 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 { 
-    public float speed = 10.0f;
-    public float gravity = 20.0f;
-    public float maxVelocityChange = 10.0f;
-    public bool canJump = true;
-    public float jumpHeight = 2.0f;
-    private bool grounded = false;
-
+    public float speed;
+    public float gravity;
+    public float maxVelocityChange;
+    public bool canJump;
+    public float jumpHeight;
+    private bool grounded;
     public int hp;
-    private 
-
-
     Ray cameraRay;             
     RaycastHit cameraRayHit;
+    Weapon activeWeapon;
+
+    public int damageDone;
 
     void Awake()
     {
+        SetUp();   
+    }
+
+
+    void SetUp() {
+
+        speed = 10.0f;
+        gravity = 20.0f;
+        maxVelocityChange = 10.0f;
+        canJump = false;
+        jumpHeight = 2.0f;
+        grounded = false;
         hp = 100;
 
         GetComponent<Rigidbody>().freezeRotation = true;
         GetComponent<Rigidbody>().useGravity = false;
+        activeWeapon = GetComponentInChildren<WeaponController>().activeWeapon;
+
     }
 
     void Update()
     {
-        Movement();
         RotationToCursor();
+
+
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            GetComponentInChildren<WeaponController>().activeWeapon.Shoot();
+            Shoot();
         }
+
+        if (Input.GetAxis("Horizontal") != 0f || Input.GetAxis("Vertical")!=0f) {
+            Movement();
+        }
+        
+
 
         if (hp <= 0) {
             Destroy(gameObject);        
         }
 
+    }
+
+    void Shoot() {
+        Weapon active = GetComponentInChildren<WeaponController>().activeWeapon;
+        damageDone += active.Shoot();
     }
 
     void RotationToCursor() {
@@ -51,7 +76,6 @@ public class PlayerController : MonoBehaviour
             {
                 Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
                 transform.LookAt(targetPosition);
-                //Debug.DrawLine(transform.position, targetPosition, Color.red);
             }
         }
     }

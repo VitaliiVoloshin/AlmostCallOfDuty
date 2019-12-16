@@ -5,19 +5,23 @@ using UnityEngine;
 public class ManekenController : MonoBehaviour
 {
     public int hp;
+    WeaponController weaponController;
     // Start is called before the first frame update
     void Start()
     {
+        weaponController = GetComponentInChildren<WeaponController>();
         hp = 100;
         name = transform.gameObject.name;
     }
     private void Update()
     {
-        GetComponentInChildren<WeaponController>().activeWeapon.Shoot();
+        if (weaponController) {
+            weaponController.activeWeapon.Shoot();
+        }
+        //GetComponentInChildren<WeaponController>().activeWeapon.Shoot();
 
         if (hp <= 0) {
-            //FindObjectOfType<RespawnController>().UnitRespawn(transform.position, transform.rotation);
-            Destroy(gameObject);   
+            Die(); 
         }
     }
 
@@ -27,5 +31,7 @@ public class ManekenController : MonoBehaviour
 
 
 
-   
+    void Die() {
+        Destroy(gameObject);
+    }
 }

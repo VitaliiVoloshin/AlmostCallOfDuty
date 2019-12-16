@@ -17,6 +17,7 @@ public class WeaponController : MonoBehaviour
     void Start()
     {
         SelectWeapon();
+        
     }
 
     // Update is called once per frame
@@ -60,7 +61,11 @@ public class WeaponController : MonoBehaviour
             {
                 weapon.gameObject.SetActive(true);
                 activeWeapon = weapon.GetComponent<Weapon>();
-
+                activeWeapon.owner = GetComponentInParent<PlayerController>();
+                if (!GetComponentInParent<PlayerController>())
+                {
+                    activeWeapon.owner = GetComponentInParent<ManekenController>();
+                }
             }
             else {
                 weapon.gameObject.SetActive(false);

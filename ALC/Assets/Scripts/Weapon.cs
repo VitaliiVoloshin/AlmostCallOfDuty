@@ -11,12 +11,12 @@ public class Weapon : MonoBehaviour
 
     public float _spread;
     public float _speed;
+    public Object owner;
 
     void Start()
     {
         _spread = GetSpredingDegree(_weaponData.ShootingRange,_weaponData.Spreading);
         _speed = NormilizedShootingSpeed(_weaponData.ShotsPerSecond);
-        Debug.Log("weaponInit");
     }
 
 
@@ -30,7 +30,7 @@ public class Weapon : MonoBehaviour
         return 1 / speed;
     }
 
-    public void Shoot() {
-        GetComponentInChildren<ShootLogic>().Shoot();
+    public int Shoot() {
+        return GetComponentInChildren<ShootLogic>().Shoot();
     }
 }

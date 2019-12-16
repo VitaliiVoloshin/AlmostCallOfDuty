@@ -7,39 +7,19 @@ public class MenuController : MonoBehaviour
 {
     public GameObject mainMenu;
     public GameObject options;
-    
-
-    private bool _optionState;
-
-    private void Start()
-    {
-        _optionState = false;
-    }
-
-    private void Update()
-    {
-        if (_optionState)
-        {
-            options.SetActive(true);
-            mainMenu.SetActive(false);
-        }
-        else
-        {
-            options.SetActive(false);
-            mainMenu.SetActive(true);
-        }
-    }
 
     public void PlayGame() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void BackToMainMenu() {
-        _optionState = false;
+        options.SetActive(false);
+        mainMenu.SetActive(true);
     }
 
     public void GameOptions() {
-        _optionState = true;
+        options.SetActive(true);
+        mainMenu.SetActive(false);
     }
 
     public void GameQuit() {
