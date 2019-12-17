@@ -79,6 +79,7 @@ public class RespawnController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         GameObject tempunit = Instantiate(Resources.Load(manekens[index].name), manekens[index].position, manekens[index].rotation) as GameObject;
+        tempunit.name = manekens[index].name;
         tempunit.transform.parent = m_unitHolder.transform;
         Destroy(m_unitHolder.manekens[index].gameObject);
         m_unitHolder.manekens[index] = tempunit;

@@ -999,7 +999,7 @@ PrefabInstance:
     - target: {fileID: 8372524754229763765, guid: 34b6fcd78d767ed4b908122267fa9d81,
         type: 3}
       propertyPath: m_Name
-      value: AutoRifleManeken (1)
+      value: AutoRifleManeken
       objectReference: {fileID: 0}
     - target: {fileID: 8372524754229763769, guid: 34b6fcd78d767ed4b908122267fa9d81,
         type: 3}
@@ -1396,7 +1396,7 @@ PrefabInstance:
     - target: {fileID: 744354752321242673, guid: a0fa6bbac10041a4f8196db2e7d4d672,
         type: 3}
       propertyPath: m_Name
-      value: ShotgunManeken (1)
+      value: ShotgunManeken
       objectReference: {fileID: 0}
     - target: {fileID: 744354752321242669, guid: a0fa6bbac10041a4f8196db2e7d4d672,
         type: 3}
