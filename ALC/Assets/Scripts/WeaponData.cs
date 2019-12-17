@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 [
 
-CreateAssetMenu(fileName = "New SwordData", menuName = "Sword Data", order = 51)]
+CreateAssetMenu(fileName = "New WeaponData", menuName = "Weapon Data", order = 51)]
 public class WeaponData : ScriptableObject
 {
     [SerializeField]
@@ -13,7 +13,7 @@ public class WeaponData : ScriptableObject
     [SerializeField]
     private float _reloadSpeed;
     [SerializeField]
-    private int _damage;
+    private float _damage;
     [SerializeField]
     private int _bulletsPerShoot;
     //[SerializeField]
@@ -47,7 +47,7 @@ public class WeaponData : ScriptableObject
         }
     }
 
-    public int Damage
+    public float Damage
     {
         get
         {

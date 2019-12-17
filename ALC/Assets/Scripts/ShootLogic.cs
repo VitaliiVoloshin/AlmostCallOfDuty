@@ -18,8 +18,9 @@ public class ShootLogic : MonoBehaviour
     void SetUp() {
         weapon = GetComponentInParent<Weapon>();
         nextFire = 0;
-        speed = weapon._speed;
-        howManyBullets = weapon._weaponData.BulletsPerShoot;
+
+        /*speed = weapon._speed;
+        howManyBullets = weapon._weaponData.BulletsPerShoot;*/
     }
 
     public int Shoot()
@@ -62,6 +63,7 @@ public class ShootLogic : MonoBehaviour
 
         GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation) as GameObject;
         newBullet.GetComponent<Bullet>().Direction = direction;
+        newBullet.GetComponent<Renderer>().material.color = weapon.bulletColor;
     }
 
     int SingleBulletEffect(Vector3 direction) {
@@ -69,47 +71,22 @@ public class ShootLogic : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, direction, out hit))
         {
-            if (hit.transform.GetComponent<PlayerController>())
-            {
-                hit.transform.GetComponent<PlayerController>().TakeDamage(weapon._weaponData.Damage);
-                //damageDone += weapon._weaponData.Damage;
-                PlayerController enemy = hit.transform.GetComponent<PlayerController>();
-                if (enemy.hp - weapon._weaponData.Damage <= 0)
-                {
-                    
-                    FindObjectOfType<BattleGrounObserver>().AddKill(new KillList { Killer = weapon.owner.name, Victum = enemy.gameObject.name });
-                    enemy.TakeDamage(weapon._weaponData.Damage);
-                    //damageDone += weapon._weaponData.Damage;
-                }
-                else
-                {
-                    enemy.TakeDamage(weapon._weaponData.Damage);
-                    //damageDone += weapon._weaponData.Damage;
-                }
-
-            }
-
             if (hit.transform.GetComponent<ManekenController>())
-            {
-                ManekenController enemy = hit.transform.GetComponent<ManekenController>();
-                if (enemy.hp - weapon._weaponData.Damage <= 0)
                 {
-                    
-                    FindObjectOfType<BattleGrounObserver>().AddKill(new KillList { Killer = weapon.owner.name, Victum = enemy.gameObject.name });
-                    enemy.TakeDamage(weapon._weaponData.Damage);
-                    //damageDone += weapon._weaponData.Damage;
-                }
-                else
-                {
-                    enemy.TakeDamage(weapon._weaponData.Damage);
-                    //damageDone += weapon._weaponData.Damage;
-                }
+                    ManekenController enemy = hit.transform.GetComponent<ManekenController>();
+                    enemy.TakeDamage(weapon._oneBulletDamage);
 
-                damageDone += weapon._weaponData.Damage;
+                    if (enemy.hp - weapon._oneBulletDamage <= 0)
+                    {
+                        FindObjectOfType<BattleGrounObserver>().AddKill(new KillList { Killer = weapon.owner.name, Victum = enemy.gameObject.name });
+                    }
             }
         }
+
         return damageDone;
     }
+
+
 
     Vector3 RandomRayPoint(float spread, int range) 
     {

@@ -4,41 +4,74 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 
+public class UnitStats {
+
+    private float reset = 1f;
+
+
+
+    private float m_movementSpeed = 1f;
+    private float m_attackSpeed = 1f;
+    private float m_damageCaused = 1f;
+    private float m_damageTaken = 1f;
+
+    public float health { get; set; } = 100;
+
+    public float movementSpeed {
+        get { return m_movementSpeed; }
+        set { m_movementSpeed *= value; }
+    }
+    public float attackSpeed
+    {
+        get { return m_attackSpeed; }
+        set { m_attackSpeed *= value; }
+    }
+    public float damageCaused
+    {
+        get { return m_damageCaused; }
+        set { m_damageCaused *= value; }
+    }
+    public float damageTaken
+    {
+        get { return m_damageTaken; }
+        set { m_damageTaken *= value; }
+    }
+
+    public void ResetToDefault(float param) {
+        param = reset;
+    }
+}
+
 public class PlayerController : MonoBehaviour
-{ 
-    public float speed;
+{
+    public UnitStats stats = new UnitStats();
     public float gravity;
     public float maxVelocityChange;
     public bool canJump;
     public float jumpHeight;
     private bool grounded;
-    public int hp;
     Ray cameraRay;             
     RaycastHit cameraRayHit;
-    Weapon activeWeapon;
 
     public int damageDone;
 
     void Awake()
     {
+        stats.ResetToDefault(stats.movementSpeed);
         SetUp();   
     }
 
 
     void SetUp() {
-
-        speed = 10.0f;
         gravity = 20.0f;
         maxVelocityChange = 10.0f;
         canJump = false;
         jumpHeight = 2.0f;
         grounded = false;
-        hp = 100;
-
+        stats.attackSpeed = 2f;
+        stats.damageCaused = 1.2f;
         GetComponent<Rigidbody>().freezeRotation = true;
         GetComponent<Rigidbody>().useGravity = false;
-        activeWeapon = GetComponentInChildren<WeaponController>().activeWeapon;
-
     }
 
     void Update()
@@ -48,19 +81,40 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Mouse0))
         {
+           
             Shoot();
+            if (Input.GetAxis("Horizontal") != 0f || Input.GetAxis("Vertical") != 0f)
+            {
+                Movement(stats.movementSpeed * MovementSpeedDepensOnActiveWeapon());
+            }
         }
-
-        if (Input.GetAxis("Horizontal") != 0f || Input.GetAxis("Vertical")!=0f) {
-            Movement();
+        else {
+            if (Input.GetAxis("Horizontal") != 0f || Input.GetAxis("Vertical") != 0f)
+            {
+                Movement(stats.movementSpeed);
+            }
         }
         
-
-
-        if (hp <= 0) {
-            Destroy(gameObject);        
+        if (stats.health <= 0)
+        {
+            Destroy(gameObject);
         }
 
+    }
+
+    float MovementSpeedDepensOnActiveWeapon()
+    {
+        if (GetComponentInChildren<WeaponController>().activeWeapon._weaponData.Identificator == "shotgun")
+        {
+            return 0.75f;
+            
+        }
+        if (GetComponentInChildren<WeaponController>().activeWeapon._weaponData.Identificator == "rifle")
+        {
+
+            return 0.85f;
+        }
+        else return 1f;
     }
 
     void Shoot() {
@@ -80,11 +134,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Movement() {
+    void Movement(float speed) {
         if (grounded)
         {
             Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            targetVelocity *= speed;
+            targetVelocity *= speed*10;
             Vector3 velocity = GetComponent<Rigidbody>().velocity;
             Vector3 velocityChange = (targetVelocity - velocity);
             velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
@@ -92,10 +146,10 @@ public class PlayerController : MonoBehaviour
             velocityChange.y = 0;
             GetComponent<Rigidbody>().AddForce(velocityChange, ForceMode.VelocityChange);
 
-            if (canJump && Input.GetButton("Jump"))
+            /*if (canJump && Input.GetButton("Jump"))
             {
                 GetComponent<Rigidbody>().velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
-            }
+            }*/
         }
         GetComponent<Rigidbody>().AddForce(new Vector3(0, -gravity * GetComponent<Rigidbody>().mass, 0));
         grounded = false;
@@ -118,6 +172,6 @@ public class PlayerController : MonoBehaviour
     }
 
     public void TakeDamage(int damage) {
-        hp -= damage;
+        stats.health -= damage*stats.damageTaken;
     }
 }

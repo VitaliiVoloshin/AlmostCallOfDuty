@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ManekenController : MonoBehaviour
 {
-    public int hp;
+    public float hp;
     WeaponController weaponController;
     // Start is called before the first frame update
     void Start()
@@ -25,7 +25,7 @@ public class ManekenController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage) {
+    public void TakeDamage(float damage) {
         hp -= damage;
     }
 

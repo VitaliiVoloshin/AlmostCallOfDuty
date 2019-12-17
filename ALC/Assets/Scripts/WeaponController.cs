@@ -14,10 +14,10 @@ public class WeaponController : MonoBehaviour
     private int selectedWeapon = 0;
     public Weapon activeWeapon;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         SelectWeapon();
-        
+        //Debug.Log(activeWeapon.owner);
     }
 
     // Update is called once per frame
