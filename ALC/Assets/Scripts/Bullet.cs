@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
 
     public Vector3 Direction;
 
-    private void Update()
+    private void FixedUpdate()
     {
         transform.position += Direction * Time.deltaTime * 3;
         StartCoroutine(SelfDestruction(1.5f));
@@ -17,6 +17,11 @@ public class Bullet : MonoBehaviour
     private IEnumerator SelfDestruction(float value)
     {        
         yield return new WaitForSeconds(value);
+        Destroy(gameObject);
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
         Destroy(gameObject);
     }
 }

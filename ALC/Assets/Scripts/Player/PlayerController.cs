@@ -45,7 +45,7 @@ public class UnitStats {
 public class PlayerController : MonoBehaviour
 {
     public UnitStats stats = new UnitStats();
-    private Grenade grenade;
+    //private GrenadeThrower grenade;
     public float gravity;
     public float maxVelocityChange;
     public bool canJump;
