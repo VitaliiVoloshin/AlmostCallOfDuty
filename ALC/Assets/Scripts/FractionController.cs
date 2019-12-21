@@ -9,38 +9,35 @@ public class FractionController : MonoBehaviour
     private List<GameObject> redNation;
 
     public UnitHolder unitHolder;
-    void Start()
+
+    void OnEnable()
     {
         unitHolder = FindObjectOfType<UnitHolder>();
         greenPeace = unitHolder.players;
         redNation = unitHolder.manekens;
-        StartCoroutine(LateStart(0.1f));
-
+        FractionAutoSet();
     }
-    IEnumerator LateStart(float delay) {
-        yield return new WaitForSeconds(delay);
 
+    void Update()
+    {
+        FractionAutoSet();
+    }
+    void FractionAutoSet() {
+        foreach (GameObject unit in redNation)
+        {
+            if (unit.GetComponentInChildren<UIHealthBarController>())
+            {
+                unit.GetComponent<ManekenController>().stats.fraction = UnitStats.Fraction.red;
+
+            }
+        }
         foreach (GameObject unit in greenPeace)
         {
             if (unit.GetComponentInChildren<UIHealthBarController>())
             {
                 unit.GetComponent<PlayerController>().stats.fraction = UnitStats.Fraction.green;
-                //GameObject hpbar = unit.GetComponentInChildren<UIHealthBarController>().gameObject;
-               // hpbar.transform.GetChild(1).GetComponent<Image>().color = Color.green;
             }
         }
-
-        foreach (GameObject unit in redNation)
-        {
-            if (unit.GetComponentInChildren<UIHealthBarController>()) { 
-            GameObject hpbar = unit.GetComponentInChildren<UIHealthBarController>().gameObject;
-            hpbar.transform.GetChild(1).GetComponent<Image>().color = Color.red;
-            }
-        }
-    }
-
-    void Update()
-    {
     }
 
 }

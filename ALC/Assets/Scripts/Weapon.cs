@@ -8,19 +8,23 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField]
     public WeaponData _weaponData;
-
     public float _spread;
     public float _speed;
     public float _oneBulletDamage;
     public Color bulletColor;
     public Object owner;
+    int currentAmmo;
+    int maxAmmo;
+    bool isReloading = false;
 
     void Start()
     {
+        currentAmmo = 10;
         _spread = GetSpredingDegree(_weaponData.ShootingRange, _weaponData.Spreading);
         _speed = NormilizedShootingSpeed(_weaponData.ShotsPerSecond * OwnersAtackSpeed());
         _oneBulletDamage = NormilizedDamageDeal(_oneBulletDamage);
         bulletColor = BulletColorDependsOnOwner();
+        maxAmmo = currentAmmo;
 
     }
 
@@ -66,7 +70,11 @@ public class Weapon : MonoBehaviour
             return Color.red;
     }
 
-    public int Shoot() {
-        return GetComponentInChildren<ShootLogic>().Shoot();
+    public void Shoot() {
+       
+        GetComponentInChildren<ShootLogic>().Shoot();
+
     }
+
+
 }

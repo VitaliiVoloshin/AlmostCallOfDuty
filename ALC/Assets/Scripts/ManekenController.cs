@@ -6,13 +6,15 @@ public class ManekenController : MonoBehaviour
 {
     public float hp;
     WeaponController weaponController;
-    public UnitStats stats = new UnitStats();
+    public StatsController stats;
     // Start is called before the first frame update
+    private void Awake()
+    {
+        stats = GetComponent<StatsController>();
+    }
     void Start()
     {
-        stats.fraction = UnitStats.Fraction.red;
         weaponController = GetComponentInChildren<WeaponController>();
-        hp = 100;
         name = transform.gameObject.name;
     }
     private void Update()

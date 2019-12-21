@@ -6,7 +6,6 @@ using UnityEngine;
 public class GrenadeThrower : MonoBehaviour
 {
 
-    [SerializeField] private Transform forceTransform;
     private SpriteMask forceSpriteMask;
     float testForce;
     public LineRenderer trajectory;

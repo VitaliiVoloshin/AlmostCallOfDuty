@@ -7,20 +7,17 @@ public class UIHealthBarController : MonoBehaviour
     private Camera m_Camera;
     Image healthBar;
     float maxHealth;
+    StatsController parentStats;
     // Start is called before the first frame update
     Quaternion rotation;
     void Start()
     {
-
+        parentStats = GetComponentInParent<StatsController>();
         healthBar = transform.GetChild(1).GetComponent<Image>();
         m_Camera = Camera.main;
-        if (GetComponentInParent<PlayerController>()) {
-            maxHealth = GetComponentInParent<PlayerController>().stats.health;
-        }
+        maxHealth = parentStats.health;
 
-        if (GetComponentInParent<ManekenController>()) {
-            maxHealth = GetComponentInParent<ManekenController>().stats.health;
-        }
+
     }
 
     private void Awake()
@@ -31,17 +28,27 @@ public class UIHealthBarController : MonoBehaviour
     // Update is called once per frame
 
     private void Update()
+
     {
-        if (GetComponentInParent<PlayerController>())
+
+        if (parentStats != null)
         {
-            healthBar.fillAmount = GetComponentInParent<PlayerController>().stats.health/maxHealth;
+           
+            if (parentStats.fraction == UnitStats.Fraction.green)
+                transform.GetChild(1).GetComponent<Image>().color = Color.green;
+
+            if (parentStats.fraction == UnitStats.Fraction.red)
+                transform.GetChild(1).GetComponent<Image>().color = Color.red;
+
         }
 
-        if (GetComponentInParent<ManekenController>())
-        {
-            healthBar.fillAmount = GetComponentInParent<ManekenController>().stats.health/maxHealth;
+
+        if (parentStats != null)
+        {           
+            healthBar.fillAmount = parentStats.health / maxHealth;    
         }
     }
+
     void LateUpdate()
     {
         transform.rotation = rotation;

@@ -14,12 +14,11 @@ public class UnitHolder : MonoBehaviour
     public List<GameObject> m_manekensClone;
 
 
-    void Start()
+    void Awake()
     {
         AddAllManekens(manekens);
         AddAllPlayers(players);
         AddAllObjects(units);
-        Debug.Log(units.Count);
         RestructCurrent();
     }
 

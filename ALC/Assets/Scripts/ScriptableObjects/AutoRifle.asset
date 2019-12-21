@@ -19,3 +19,4 @@ MonoBehaviour:
   _bulletsPerShoot: 1
   _shootingRange: 15
   _spreading: 4
+  _bulletsInMagazine: 45

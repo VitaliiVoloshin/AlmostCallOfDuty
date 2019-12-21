@@ -22,6 +22,10 @@ public class WeaponData : ScriptableObject
     private int _shootingRange;
     [SerializeField]
     private int _spreading;
+    [SerializeField]
+    private int _bulletsInMagazine;
+
+
 
     public string Identificator
     {
@@ -84,6 +88,14 @@ public class WeaponData : ScriptableObject
         get
         {
             return _spreading;
+        }
+    }
+
+    public int bulletsInMagazine
+    {
+        get
+        {
+            return _bulletsInMagazine;
         }
     }
 

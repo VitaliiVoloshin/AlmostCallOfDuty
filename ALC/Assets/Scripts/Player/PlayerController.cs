@@ -4,61 +4,23 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 
-public class UnitStats {
 
-    private float reset = 1f;
-
-
-    public enum Fraction{
-        green,
-        red
-    }
-    public Fraction fraction { get; set; }
-    private float m_movementSpeed = 1f;
-    private float m_attackSpeed = 1f;
-    private float m_damageCaused = 1f;
-    private float m_damageTaken = 1f;
-
-    public float health { get; set; } = 100;
-
-    public float movementSpeed {
-        get { return m_movementSpeed; }
-        set { m_movementSpeed *= value; }
-    }
-    public float attackSpeed
-    {
-        get { return m_attackSpeed; }
-        set { m_attackSpeed *= value; }
-    }
-    public float damageCaused
-    {
-        get { return m_damageCaused; }
-        set { m_damageCaused *= value; }
-    }
-    public float damageTaken
-    {
-        get { return m_damageTaken; }
-        set { m_damageTaken *= value; }
-    }
-
-    public void ResetToDefault(float param) {
-        param = reset;
-    }
-}
 
 public class PlayerController : MonoBehaviour
 {
 
-    
+
     //public GameObject HealthBar;
-    
-    public UnitStats stats = new UnitStats();
+
+    public StatsController stats;
     //private GrenadeThrower grenade;
     public float gravity;
     public float maxVelocityChange;
     public bool canJump;
     public float jumpHeight;
     private bool grounded;
+
+
     Ray cameraRay;             
     RaycastHit cameraRayHit;
 
@@ -67,14 +29,12 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        
-        stats.ResetToDefault(stats.movementSpeed);
+        stats = GetComponent<StatsController>();
         SetUp();   
     }
 
 
     void SetUp() {
-        stats.fraction = UnitStats.Fraction.green;
         gravity = 20.0f;
         maxVelocityChange = 10.0f;
         canJump = false;
@@ -133,7 +93,7 @@ public class PlayerController : MonoBehaviour
 
     void Shoot() {
         Weapon active = GetComponentInChildren<WeaponController>().activeWeapon;
-        damageDone += active.Shoot();
+        active.Shoot();
     }
 
     public Vector3 RotationToCursor(Transform position) {
@@ -185,7 +145,7 @@ public class PlayerController : MonoBehaviour
         return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
     }
 
-    public void TakeDamage(int damage) {
+    public void TakeDamage(float damage) {
         stats.health -= damage*stats.damageTaken;
     }
 }

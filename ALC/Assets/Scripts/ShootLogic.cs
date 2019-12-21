@@ -2,13 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class ShootLogic : MonoBehaviour
 {
+
+
     private Weapon weapon;
     public float speed;
     public float nextFire;
     public int howManyBullets;
     public GameObject bullet;
+    public ShotInfo shotInfo;
+    int currentAmmo;
+    int maxAmmo;
+    bool isReloading;
 
     void Start()
     {
@@ -16,43 +23,80 @@ public class ShootLogic : MonoBehaviour
     }
 
     void SetUp() {
+
+        
+
         weapon = GetComponentInParent<Weapon>();
+        currentAmmo = weapon._weaponData.bulletsInMagazine;
         nextFire = 0;
+        maxAmmo = currentAmmo;
 
         /*speed = weapon._speed;
         howManyBullets = weapon._weaponData.BulletsPerShoot;*/
     }
 
-    public int Shoot()
+    public void Shoot()
     {
-        int damageDone = 0;
 
         if (Time.time > nextFire) {
             speed = weapon._speed;
             howManyBullets = weapon._weaponData.BulletsPerShoot;
-            damageDone += ShootBullets(howManyBullets);
-
-
+            if (isReloading) return;
+            if (currentAmmo < 2)
+            {
+                StartCoroutine(Reload());
+            }
+            ShootBullets(howManyBullets);
+            currentAmmo--;
             nextFire = Time.time + speed;
         }
 
-        return damageDone;
+        /*public void Shoot()
+        {
+            if (isReloading) return;
+            if (currentAmmo <= 0)
+            {
+                StartCoroutine(Reload());
+            }
+            GetComponentInChildren<ShootLogic>().Shoot();
+            currentAmmo--;
+        }
+
+        IEnumerator Reload()
+        {
+            isReloading = true;
+            yield return new WaitForSeconds(_weaponData.RealadSpeed);
+            currentAmmo = maxAmmo;
+            isReloading = false;
+
+        }*/
     }
 
-    int ShootBullets(int howmany)
+    IEnumerator Reload()
     {
-        int damageDone = 0;
+        isReloading = true;
+        yield return new WaitForSeconds(weapon._weaponData.RealadSpeed);
+        currentAmmo = maxAmmo;
+        isReloading = false;
+
+    }
+
+    void ShootBullets(int howmany)
+    {
 
         while (howmany != 0)
         {
             Vector3 direction = GetRandomDirection();
            
             BulletInstantiation(direction);
-            damageDone += SingleBulletEffect(direction);
+            if (FindObjectOfType<BattleGrounObserver>())
+            {
+                if (SingleBulletEffect(direction)!=null)
+                FindObjectOfType<BattleGrounObserver>().addShotInfo(SingleBulletEffect(direction));
+            }
 
             howmany--;
         }
-        return damageDone;
     }
 
     Vector3 GetRandomDirection() {
@@ -66,24 +110,36 @@ public class ShootLogic : MonoBehaviour
         newBullet.GetComponent<Renderer>().material.color = weapon.bulletColor;
     }
 
-    int SingleBulletEffect(Vector3 direction) {
-        int damageDone=0;
+    ShotInfo SingleBulletEffect(Vector3 direction) {
+        ShotInfo shotInfo = new ShotInfo();
         RaycastHit hit;
         if (Physics.Raycast(transform.position, direction, out hit))
         {
             if (hit.transform.GetComponent<ManekenController>())
+            {
+                ManekenController enemy = hit.transform.GetComponent<ManekenController>();
+                if (enemy.hp - weapon._oneBulletDamage <= 0)
                 {
-                    ManekenController enemy = hit.transform.GetComponent<ManekenController>();
-                    enemy.TakeDamage(weapon._oneBulletDamage);
+                    FindObjectOfType<BattleGrounObserver>().AddKill(new KillList { Killer = weapon.owner.name, Victum = enemy.gameObject.name });
+                    shotInfo = new ShotInfo { Killer = weapon.owner, Victum = enemy, damage = weapon._oneBulletDamage };
 
-                    if (enemy.hp - weapon._oneBulletDamage <= 0)
-                    {
-                        FindObjectOfType<BattleGrounObserver>().AddKill(new KillList { Killer = weapon.owner.name, Victum = enemy.gameObject.name });
-                    }
+                }
+                enemy.TakeDamage(weapon._oneBulletDamage);
+
+
+            }
+            if (hit.transform.GetComponent<PlayerController>())
+            {
+                PlayerController enemy = hit.transform.GetComponent<PlayerController>();
+                if (enemy.stats.health - weapon._oneBulletDamage <= 0)
+                {
+                    FindObjectOfType<BattleGrounObserver>().AddKill(new KillList { Killer = weapon.owner.name, Victum = enemy.gameObject.name });
+                }
+                enemy.TakeDamage(weapon._oneBulletDamage);
+
             }
         }
-
-        return damageDone;
+        return shotInfo;
     }
 
 
