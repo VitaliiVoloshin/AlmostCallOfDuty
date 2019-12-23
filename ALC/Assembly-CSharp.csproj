@@ -76,7 +76,6 @@
     <Compile Include="Assets\Scripts\Actor\UnitStats.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\GroupControllers\UnitHolder.cs" />
-    <Compile Include="Assets\Scripts\InputController\Input.cs" />
     <Compile Include="Assets\Scripts\InputController\InputController.cs" />
     <Compile Include="Assets\Scripts\Menu\Language\LanguageController.cs" />
     <Compile Include="Assets\Scripts\Menu\Language\SetLocalizedText.cs" />
