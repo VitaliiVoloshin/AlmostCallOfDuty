@@ -33,10 +33,10 @@ public class FractionController : MonoBehaviour
         }
         foreach (GameObject unit in greenPeace)
         {
-            if (unit.GetComponentInChildren<UIHealthBarController>())
+            /*if (unit.GetComponentInChildren<UIHealthBarController>())
             {
-                unit.GetComponent<PlayerController>().stats.fraction = UnitStats.Fraction.green;
-            }
+                //unit.GetComponent<PlayerController>().stats.fraction = UnitStats.Fraction.green;
+            }*/
         }
     }
 

@@ -8,17 +8,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
-
-    //public GameObject HealthBar;
-
     public StatsController stats;
-    //private GrenadeThrower grenade;
     public float gravity;
     public float maxVelocityChange;
     public bool canJump;
     public float jumpHeight;
     private bool grounded;
+
+
+    public Camera camera;
 
 
     Ray cameraRay;             
@@ -29,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        
         stats = GetComponent<StatsController>();
         SetUp();   
     }
@@ -49,9 +48,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        //transform.localRotation = Vector3.zero;//HealthBar.transform.LookAt(transform.position + camera.transform.rotation * Vector3.forward, camera.transform.rotation * Vector3.up);
         transform.LookAt(RotationToCursor(transform));
-
+        if (FindObjectOfType<CameraController>().player == null) {
+            FindObjectOfType<CameraController>().player = gameObject;
+        }
 
         if (Input.GetKey(KeyCode.Mouse0))
         {
@@ -101,7 +101,6 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(cameraRay, out cameraRayHit))
         {
                 Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
-                //transform.LookAt(targetPosition);
                 return targetPosition;
         }
         return Vector3.zero;
@@ -120,10 +119,6 @@ public class PlayerController : MonoBehaviour
             velocityChange.y = 0;
             GetComponent<Rigidbody>().AddForce(velocityChange, ForceMode.VelocityChange);
 
-            /*if (canJump && Input.GetButton("Jump"))
-            {
-                GetComponent<Rigidbody>().velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
-            }*/
         }
         GetComponent<Rigidbody>().AddForce(new Vector3(0, -gravity * GetComponent<Rigidbody>().mass, 0));
         grounded = false;

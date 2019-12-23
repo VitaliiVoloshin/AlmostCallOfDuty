@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 780148856078981048}
   - component: {fileID: 780148856078981063}
   - component: {fileID: 780148856078981052}
+  - component: {fileID: 2319633270536945022}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -126,11 +127,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ee1053a1cbf0f48b08c9d879880004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats: {fileID: 0}
   gravity: 20
   maxVelocityChange: 10
   canJump: 1
   jumpHeight: 2
+  camera: {fileID: 0}
   damageDone: 0
+--- !u!114 &2319633270536945022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780148856078981062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc2fd9201cfd81408194b437b44153e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &780148855347669330
 PrefabInstance:
   m_ObjectHideFlags: 0

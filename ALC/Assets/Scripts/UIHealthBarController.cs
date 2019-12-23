@@ -16,8 +16,6 @@ public class UIHealthBarController : MonoBehaviour
         healthBar = transform.GetChild(1).GetComponent<Image>();
         m_Camera = Camera.main;
         maxHealth = parentStats.health;
-
-
     }
 
     private void Awake()
