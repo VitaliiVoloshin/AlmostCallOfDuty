@@ -12,12 +12,10 @@ public class SetLocalizedText : MonoBehaviour
 
     private void Start()
     {
-
         m_languageController = LanguageController.instance;
         m_text = GetComponent<Text>();
         OnSwitchLanguage();
         SubscribeToLanguageSwitch();
-        
     }
 
     void OnSwitchLanguage() {

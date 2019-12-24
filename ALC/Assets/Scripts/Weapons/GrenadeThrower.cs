@@ -6,7 +6,7 @@ using UnityEngine;
 public class GrenadeThrower : MonoBehaviour
 {
 
-    private SpriteMask forceSpriteMask;
+    /*private SpriteMask forceSpriteMask;
     float testForce;
     public LineRenderer trajectory;
     public GameObject targetArea;
@@ -192,5 +192,5 @@ public class GrenadeThrower : MonoBehaviour
             m_trajectory = Instantiate(trajectory);
             m_targetArea = Instantiate(targetArea);
     }
-
+    */
 }

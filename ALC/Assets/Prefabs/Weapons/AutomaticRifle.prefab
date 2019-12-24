@@ -678,9 +678,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124ccf2ea63600041aa3bc61f1eb087c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootPoint: {fileID: 0}
   _weaponData: {fileID: 11400000, guid: 9b39d74b52beee8419d45d9e7e2d3f08, type: 2}
-  _spread: 0
-  _speed: 0
   _oneBulletDamage: 0
   bulletColor: {r: 0, g: 0, b: 0, a: 0}
   owner: {fileID: 0}
@@ -849,7 +848,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 20528762504290314}
-  - component: {fileID: 20528762504290315}
   m_Layer: 0
   m_Name: ShootPoint
   m_TagString: Untagged
@@ -871,19 +869,3 @@ Transform:
   m_Father: {fileID: 20528762399597383}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &20528762504290315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 20528762504290313}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e83dfcd81acfa3641b857d37fc12e963, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0
-  nextFire: 0
-  howManyBullets: 0
-  bullet: {fileID: 8389332677933869822, guid: 25e356001a251274b9299050708128ec, type: 3}

@@ -12,22 +12,22 @@ public class FractionController : MonoBehaviour
 
     void OnEnable()
     {
-        unitHolder = FindObjectOfType<UnitHolder>();
-        greenPeace = unitHolder.players;
-        redNation = unitHolder.manekens;
-        FractionAutoSet();
+        //unitHolder = FindObjectOfType<UnitHolder>();
+        //greenPeace = unitHolder.players;
+        //redNation = unitHolder.manekens;
+        //FractionAutoSet();
     }
 
     void Update()
     {
-        FractionAutoSet();
+        //FractionAutoSet();
     }
     void FractionAutoSet() {
         foreach (GameObject unit in redNation)
         {
             if (unit.GetComponentInChildren<UIHealthBarController>())
             {
-                unit.GetComponent<ManekenController>().stats.fraction = UnitStats.Fraction.red;
+                //unit.GetComponent<ActorController>().stats.fraction = ActorStats.Fraction.red;
 
             }
         }

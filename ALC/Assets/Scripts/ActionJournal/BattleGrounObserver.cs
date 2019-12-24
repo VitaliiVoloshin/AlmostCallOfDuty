@@ -6,26 +6,22 @@ public class KillList
 {
     public string Killer { get; set; }
     public string Victum { get; set; }
+    public string Weapon { get; set; }
 }
 
-public class ShotInfo
+/*public class ShotInfo
 {
     public Object Killer { get; set; }
     public Object Victum { get; set; }
     public float damage { get; set; }
-}
+}*/
 
 public class BattleGrounObserver : MonoBehaviour
 {
     public Dictionary<int, KillList> killJournal = new Dictionary<int, KillList>();
-    public Dictionary<int, ShotInfo> shootJournal = new Dictionary<int,ShotInfo>();
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
+    public static BattleGrounObserver instance;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -44,8 +40,4 @@ public class BattleGrounObserver : MonoBehaviour
             killJournal.Add(killJournal.Count, record); 
     }
 
-
-    public void addShotInfo(ShotInfo record) {
-        shootJournal.Add(shootJournal.Count, record);
-    }
 }

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef5b257e98ed164cabf1cb4cce457a4, type: 3}
   m_Name: AutoRifle
   m_EditorClassIdentifier: 
-  _identificator: rifle
-  _shotsPerSecond: 10
-  _reloadSpeed: 3
-  _damage: 20
-  _bulletsPerShoot: 1
-  _shootingRange: 15
-  _spreading: 4
-  _bulletsInMagazine: 45
+  m_identificator: 
+  m_shotsPerSecond: 10
+  m_reloadSpeed: 1
+  m_damage: 20
+  m_bulletsPerShoot: 1
+  m_shootingRange: 30
+  m_spreading: 3
+  m_bulletsInMagazine: 30

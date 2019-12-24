@@ -2,34 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 [CreateAssetMenu(fileName = "New WeaponData", menuName = "Weapon Data", order = 51)]
+
 public class WeaponData : ScriptableObject
 {
     [SerializeField]
-    private string _identificator;
+    private string m_identificator;
     [SerializeField]
-    private int _shotsPerSecond;
+    private int m_shotsPerSecond;
     [SerializeField]
-    private float _reloadSpeed;
+    private float m_reloadSpeed;
     [SerializeField]
-    private float _damage;
+    private float m_damage;
     [SerializeField]
-    private int _bulletsPerShoot;
+    private int m_bulletsPerShoot;
     //[SerializeField]
     //private Sprite _icon;
     [SerializeField]
-    private int _shootingRange;
+    private float m_shootingRange;
     [SerializeField]
-    private int _spreading;
+    private int m_spreading;
     [SerializeField]
-    private int _bulletsInMagazine;
+    private int m_bulletsInMagazine;
 
+    private float m_spreadingDegree;
 
+    public float spreadingDegree{
+        get
+        {
+            return 180 - 2 * Mathf.Rad2Deg * Mathf.Atan(m_shootingRange * 2 / m_spreading);
+        }
+    }
+    
 
     public string Identificator
     {
         get
         {
-            return _identificator;
+            return m_identificator;
         }
     }
 
@@ -37,7 +46,11 @@ public class WeaponData : ScriptableObject
     {
         get
         {
-            return _shotsPerSecond;
+            return m_shotsPerSecond;
+        }
+
+        set {
+            m_shotsPerSecond = value;
         }
     }
 
@@ -45,7 +58,7 @@ public class WeaponData : ScriptableObject
     {
         get
         {
-            return _reloadSpeed;
+            return m_reloadSpeed;
         }
     }
 
@@ -53,7 +66,11 @@ public class WeaponData : ScriptableObject
     {
         get
         {
-            return _damage;
+            return m_damage;
+        }
+
+        set {
+            m_damage = value;
         }
     }
 
@@ -61,7 +78,7 @@ public class WeaponData : ScriptableObject
     {
         get
         {
-            return _bulletsPerShoot;
+            return m_bulletsPerShoot;
         }
     }
 
@@ -73,11 +90,11 @@ public class WeaponData : ScriptableObject
         }
     }*/
 
-    public int ShootingRange    
+    public float ShootingRange    
     {
         get
         {
-            return _shootingRange;
+            return m_shootingRange;
         }
     }
 
@@ -85,7 +102,7 @@ public class WeaponData : ScriptableObject
     {
         get
         {
-            return _spreading;
+            return m_spreading;
         }
     }
 
@@ -93,7 +110,7 @@ public class WeaponData : ScriptableObject
     {
         get
         {
-            return _bulletsInMagazine;
+            return m_bulletsInMagazine;
         }
     }
 

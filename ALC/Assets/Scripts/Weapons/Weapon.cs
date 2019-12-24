@@ -2,62 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+public enum WeaponIdentificator
+{
+    shotgun,
+    automaticRifle, 
+    grenade
+}
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField]
-    public WeaponData _weaponData;
-    public float _spread;
-    public float _speed;
+    public Transform shootPoint;
+    private ShootLogic shootLogic = new ShootLogic();
+    [SerializeField] public WeaponData _weaponData;
+    BattleGrounObserver killJournal;
+    private float m_speed;
     public float _oneBulletDamage;
     public Color bulletColor;
-    public Object owner;
+    public ActorController owner;
+    private float m_nextFire;
     int currentAmmo;
     int maxAmmo;
-    bool isReloading = false;
+    bool isReloading;
 
     void Start()
     {
-        currentAmmo = 10;
-        _spread = GetSpredingDegree(_weaponData.ShootingRange, _weaponData.Spreading);
-        _speed = NormilizedShootingSpeed(_weaponData.ShotsPerSecond * OwnersAtackSpeed());
-        _oneBulletDamage = NormilizedDamageDeal(_oneBulletDamage);
-        bulletColor = BulletColorDependsOnOwner();
+        killJournal = BattleGrounObserver.instance;
+        shootLogic.shootPoint = shootPoint;
+        currentAmmo = _weaponData.bulletsInMagazine;
+        m_speed = NormilizedShootingSpeed(_weaponData.ShotsPerSecond);
+        m_nextFire = 0;
         maxAmmo = currentAmmo;
-
+        bulletColor = BulletColorDependsOnOwner();
     }
 
-    float GetSpredingDegree(int range, int spreading)
-    {
-        return 180 - 2 * Mathf.Rad2Deg * Mathf.Atan(range * 2 / spreading);
-    }
-
-    float NormilizedDamageDeal(float damage) {
-
-        if (owner as PlayerController)
-        {
-            PlayerController player = owner as PlayerController;
-            return _weaponData.Damage * player.stats.damageCaused;
-        }
-        else {
-            return _weaponData.Damage;
-        }
+    void AddOwnerStatsToWeapon() {
+        _weaponData.Damage *= owner.stats.damageCaused;
+        float convert = _weaponData.ShotsPerSecond;
+        convert *= owner.stats.attackSpeed;
+        _weaponData.ShotsPerSecond = Mathf.RoundToInt(convert);
     }
 
     float NormilizedShootingSpeed(float speed)
     {
         return 1 / speed;
-    }
-
-    float OwnersAtackSpeed() {
-        if (owner is PlayerController)
-        {
-            PlayerController temp = owner as PlayerController;
-            return temp.stats.attackSpeed;
-        }
-        else
-            return 1;
     }
 
     Color BulletColorDependsOnOwner()
@@ -70,11 +57,34 @@ public class Weapon : MonoBehaviour
             return Color.red;
     }
 
-    public void Shoot() {
-       
-        GetComponentInChildren<ShootLogic>().Shoot();
+    public void Shoot()
+    {
+        string[] enemies = new string[_weaponData.BulletsPerShoot];
+        if (Time.time > m_nextFire)
+        {
 
+            if (isReloading) return;
+            if (currentAmmo < 2)
+            {
+                StartCoroutine(Reload());
+            }
+            enemies = shootLogic.ShootBullets(_weaponData);
+            currentAmmo--;
+            m_nextFire = Time.time + m_speed;
+        }
     }
 
+    void AddKilledEnemiesToJournal(string[] deadEnemies) {
+        
+    }
+
+    IEnumerator Reload()
+    {
+        isReloading = true;
+        yield return new WaitForSeconds(2f);
+        currentAmmo = maxAmmo;
+        isReloading = false;
+
+    }
 
 }

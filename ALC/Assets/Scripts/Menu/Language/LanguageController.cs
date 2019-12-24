@@ -73,7 +73,6 @@ public class LanguageController : MonoBehaviour
             words = new Dictionary<string, string>();
             JObject jObject = JObject.Parse(textAsset.text);
             words = jObject.ToObject<Dictionary<string, string>>();
-
         }
     }
 

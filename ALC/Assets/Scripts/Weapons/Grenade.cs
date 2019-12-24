@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Grenade : MonoBehaviour
 {
-    public Vector3[] trajectory;
+    /*public Vector3[] trajectory;
     public float force;
     int index;
     private Vector3[] cleanTrajectory;
@@ -80,5 +80,5 @@ public class Grenade : MonoBehaviour
         Destroy(gameObject);
     }
 
-
+    */
 }

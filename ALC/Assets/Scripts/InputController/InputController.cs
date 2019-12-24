@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Input", menuName = "Weapon Data", order = 52)]
+[CreateAssetMenu(fileName = "Input", menuName = "InputConfig", order = 52)]
 public class InputController:ScriptableObject
 {
     [SerializeField] private KeyCode m_grenadeThrowButton;
@@ -11,7 +11,7 @@ public class InputController:ScriptableObject
     [SerializeField] private string m_horizontalAxis;
 
     public KeyCode grenadeThrow => m_grenadeThrowButton;
-    public KeyCode shootButton => shootButton;
+    public KeyCode shootButton => m_shootButton;
     public string verticalAxis => m_verticalAxis;
     public string horizontalAxis => m_horizontalAxis;
 }

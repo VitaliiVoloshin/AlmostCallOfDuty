@@ -6,74 +6,67 @@ using UnityEngine;
 
 
 
-public class PlayerController : Actor
+public class PlayerController : ActorController
 {
+    [SerializeField] private InputController input;
     private Ray m_cameraRay;
     private RaycastHit m_cameraRayHit;
+    private KeyCode shootbutton;
+    private string verticalAxis;
+    private string horizontalAxis;
     private bool m_isGrounded;
     
     void Awake()
     {        
-        stats = GetComponent<StatsController>();
-        SetUp();   
+        SetUpControls();
     }
 
-    void SetUp() {
-
+    void SetUpControls(){
+        stats.health = 100;
+        shootbutton = input.shootButton;
+        verticalAxis = input.verticalAxis;
+        horizontalAxis = input.horizontalAxis;
         m_isGrounded = false;
-        stats.attackSpeed = 2f;
-        stats.damageCaused = 1.2f;
+        
     }
 
 
     void Update()
     {
         transform.LookAt(RotationToCursor(transform));
-        /*if (FindObjectOfType<CameraController>().player == null) {
-            FindObjectOfType<CameraController>().player = gameObject;//////
-        }*/
 
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetAxis(verticalAxis) != 0f || Input.GetAxis(horizontalAxis) != 0f)
         {
-           
-            Shoot();
-            if (Input.GetAxis("Horizontal") != 0f || Input.GetAxis("Vertical") != 0f)
+            if (Input.GetKey(shootbutton))
             {
+                Shoot();
                 Movement(stats.movementSpeed * MovementSpeedDepensOnActiveWeapon());
             }
-        }
-        else {
-            if (Input.GetAxis("Horizontal") != 0f || Input.GetAxis("Vertical") != 0f)
+            else
             {
                 Movement(stats.movementSpeed);
             }
-        }
-        
-        if (stats.health <= 0)
-        {
-            Destroy(gameObject);
-        }
 
+        }
+        else if (Input.GetKey(shootbutton)) {
+            Shoot();
+        }
+        Death();
     }
 
     float MovementSpeedDepensOnActiveWeapon()
     {
-        if (GetComponentInChildren<WeaponController>().activeWeapon._weaponData.Identificator == "shotgun")
+        if (m_weaponController.activeWeapon._weaponData.Identificator == "shotgun")
         {
             return 0.75f;
             
         }
-        if (GetComponentInChildren<WeaponController>().activeWeapon._weaponData.Identificator == "rifle")
+        if (m_weaponController.activeWeapon._weaponData.Identificator == "rifle")
         {
 
             return 0.85f;
         }
         else return 1f;
-    }
-
-    void Shoot() {
-        Weapon active = GetComponentInChildren<WeaponController>().activeWeapon;
-        active.Shoot();
     }
 
     public Vector3 RotationToCursor(Transform position) {
@@ -90,7 +83,7 @@ public class PlayerController : Actor
     void Movement(float speed) {
         if (m_isGrounded)
         {
-            Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            Vector3 targetVelocity = new Vector3(Input.GetAxis(horizontalAxis), 0, Input.GetAxis(verticalAxis));
             targetVelocity *= speed*10;
             Vector3 velocity = GetComponent<Rigidbody>().velocity;
             Vector3 velocityChange = (targetVelocity - velocity);
@@ -114,9 +107,5 @@ public class PlayerController : Actor
     float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
     {
         return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
-    }
-
-    public void TakeDamage(float damage) {
-        stats.health -= damage*stats.damageTaken;
     }
 }

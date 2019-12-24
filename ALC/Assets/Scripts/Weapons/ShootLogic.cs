@@ -2,155 +2,62 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class ShootLogic : MonoBehaviour
+public class ShootLogic
 {
+    public Transform shootPoint;
 
-
-    private Weapon weapon;
-    public float speed;
-    public float nextFire;
-    public int howManyBullets;
-    public GameObject bullet;
-    public ShotInfo shotInfo;
-    int currentAmmo;
-    int maxAmmo;
-    bool isReloading;
-
-    void Start()
+    public string[] ShootBullets(WeaponData weaponData)
     {
-        SetUp();
-    }
-
-    void SetUp() {
-
         
-
-        weapon = GetComponentInParent<Weapon>();
-        currentAmmo = weapon._weaponData.bulletsInMagazine;
-        nextFire = 0;
-        maxAmmo = currentAmmo;
-
-        /*speed = weapon._speed;
-        howManyBullets = weapon._weaponData.BulletsPerShoot;*/
-    }
-
-    public void Shoot()
-    {
-
-        if (Time.time > nextFire) {
-            speed = weapon._speed;
-            howManyBullets = weapon._weaponData.BulletsPerShoot;
-            if (isReloading) return;
-            if (currentAmmo < 2)
-            {
-                StartCoroutine(Reload());
-            }
-            ShootBullets(howManyBullets);
-            currentAmmo--;
-            nextFire = Time.time + speed;
-        }
-
-        /*public void Shoot()
-        {
-            if (isReloading) return;
-            if (currentAmmo <= 0)
-            {
-                StartCoroutine(Reload());
-            }
-            GetComponentInChildren<ShootLogic>().Shoot();
-            currentAmmo--;
-        }
-
-        IEnumerator Reload()
-        {
-            isReloading = true;
-            yield return new WaitForSeconds(_weaponData.RealadSpeed);
-            currentAmmo = maxAmmo;
-            isReloading = false;
-
-        }*/
-    }
-
-    IEnumerator Reload()
-    {
-        isReloading = true;
-        yield return new WaitForSeconds(weapon._weaponData.RealadSpeed);
-        currentAmmo = maxAmmo;
-        isReloading = false;
-
-    }
-
-    void ShootBullets(int howmany)
-    {
-
+        int howmany = weaponData.BulletsPerShoot;
+        string[] victums = new string[howmany];
+        int i = 0;
         while (howmany != 0)
         {
-            Vector3 direction = GetRandomDirection();
-           
+            Vector3 direction = GetRandomDirection(new Vector2(weaponData.spreadingDegree, weaponData.ShootingRange));
             BulletInstantiation(direction);
-            if (FindObjectOfType<BattleGrounObserver>())
-            {
-                if (SingleBulletEffect(direction)!=null)
-                FindObjectOfType<BattleGrounObserver>().addShotInfo(SingleBulletEffect(direction));
-            }
-
+            victums[i] = SingleBulletEffect(direction, weaponData);
             howmany--;
         }
+        return null;
     }
 
-    Vector3 GetRandomDirection() {
-        return RandomRayPoint(weapon._spread, weapon._weaponData.ShootingRange);
+    Vector3 GetRandomDirection(Vector2 direction) {
+        return RandomRayPoint(direction.x, direction.y);
+        //return RandomRayPoint(weapon._spread, weapon._weaponData.ShootingRange);
+    }
+
+    Vector3 RandomRayPoint(float spread, float range)
+    {
+        float degree = Random.Range(-spread / 2, spread / 2);
+        Quaternion angle = Quaternion.AngleAxis(degree, new Vector3(0, 1, 0));
+        return angle * shootPoint.forward * range;
     }
 
     void BulletInstantiation(Vector3 direction) {
 
-        GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation) as GameObject;
+        GameObject newBullet = Object.Instantiate(Resources.Load("Bullet"), shootPoint.position, shootPoint.rotation) as GameObject;
         newBullet.GetComponent<Bullet>().Direction = direction;
-        newBullet.GetComponent<Renderer>().material.color = weapon.bulletColor;
+        newBullet.GetComponent<Renderer>().material.color = Color.blue;
     }
 
-    ShotInfo SingleBulletEffect(Vector3 direction) {
-        ShotInfo shotInfo = new ShotInfo();
+    string SingleBulletEffect(Vector3 direction, WeaponData weaponData) {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, direction, out hit))
-        {
-            if (hit.transform.GetComponent<ManekenController>())
-            {
-                ManekenController enemy = hit.transform.GetComponent<ManekenController>();
-                if (enemy.hp - weapon._oneBulletDamage <= 0)
-                {
-                    FindObjectOfType<BattleGrounObserver>().AddKill(new KillList { Killer = weapon.owner.name, Victum = enemy.gameObject.name });
-                    shotInfo = new ShotInfo { Killer = weapon.owner, Victum = enemy, damage = weapon._oneBulletDamage };
+        if (Physics.Raycast(shootPoint.position, direction, out hit)) {
 
+            if (hit.transform.GetComponent<ActorController>()) {
+               
+                ActorController enemy = hit.transform.GetComponent<ActorController>();
+                if (enemy.stats.health - weaponData.Damage <= 0) {
+                    enemy.stats.health -= weaponData.Damage;
+                    return enemy.name;
+                } else {
+                    enemy.stats.health -= weaponData.Damage;
                 }
-                enemy.TakeDamage(weapon._oneBulletDamage);
-
-
-            }
-            if (hit.transform.GetComponent<PlayerController>())
-            {
-                PlayerController enemy = hit.transform.GetComponent<PlayerController>();
-                if (enemy.stats.health - weapon._oneBulletDamage <= 0)
-                {
-                    FindObjectOfType<BattleGrounObserver>().AddKill(new KillList { Killer = weapon.owner.name, Victum = enemy.gameObject.name });
-                }
-                enemy.TakeDamage(weapon._oneBulletDamage);
-
             }
         }
-        return shotInfo;
+        return "";
     }
-
-
-
-    Vector3 RandomRayPoint(float spread, int range) 
-    {
-        float degree = Random.Range(-spread/2, spread/2);
-        Quaternion angle = Quaternion.AngleAxis(degree, new Vector3(0, 1, 0));
-        return angle * transform.forward * range;
-    }
-
 }
 
 

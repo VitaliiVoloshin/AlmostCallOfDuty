@@ -12,10 +12,10 @@ public class UIHealthBarController : MonoBehaviour
     Quaternion rotation;
     void Start()
     {
-        parentStats = GetComponentInParent<StatsController>();
+        //parentStats = GetComponentInParent<StatsController>();
         healthBar = transform.GetChild(1).GetComponent<Image>();
         m_Camera = Camera.main;
-        maxHealth = parentStats.health;
+        //maxHealth = parentStats.health;
     }
 
     private void Awake()
@@ -29,7 +29,7 @@ public class UIHealthBarController : MonoBehaviour
 
     {
 
-        if (parentStats != null)
+        /*if (parentStats != null)
         {
            
             if (parentStats.fraction == UnitStats.Fraction.green)
@@ -38,13 +38,13 @@ public class UIHealthBarController : MonoBehaviour
             if (parentStats.fraction == UnitStats.Fraction.red)
                 transform.GetChild(1).GetComponent<Image>().color = Color.red;
 
-        }
+        }*/
 
 
-        if (parentStats != null)
+        /*if (parentStats != null)
         {           
             healthBar.fillAmount = parentStats.health / maxHealth;    
-        }
+        }*/
     }
 
     void LateUpdate()

@@ -61,11 +61,7 @@ public class WeaponController : MonoBehaviour
             {
                 weapon.gameObject.SetActive(true);
                 activeWeapon = weapon.GetComponent<Weapon>();
-                activeWeapon.owner = GetComponentInParent<PlayerController>();
-                if (!GetComponentInParent<PlayerController>())
-                {
-                    activeWeapon.owner = GetComponentInParent<ManekenController>();
-                }
+                activeWeapon.owner = GetComponentInParent<ActorController>();
             }
             else {
                 weapon.gameObject.SetActive(false);

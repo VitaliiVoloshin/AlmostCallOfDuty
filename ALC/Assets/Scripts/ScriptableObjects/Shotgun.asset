@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef5b257e98ed164cabf1cb4cce457a4, type: 3}
   m_Name: Shotgun
   m_EditorClassIdentifier: 
-  _identificator: shotgun
-  _shotsPerSecond: 1
-  _reloadSpeed: 4
-  _damage: 20
-  _bulletsPerShoot: 6
-  _shootingRange: 20
-  _spreading: 10
-  _bulletsInMagazine: 6
+  m_identificator: 
+  m_shotsPerSecond: 1
+  m_reloadSpeed: 2
+  m_damage: 30
+  m_bulletsPerShoot: 6
+  m_shootingRange: 15
+  m_spreading: 8
+  m_bulletsInMagazine: 6
