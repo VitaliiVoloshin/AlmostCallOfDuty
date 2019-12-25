@@ -3,38 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SetLocalizedText : MonoBehaviour
+namespace ShooterFeatures
 {
-    [SerializeField] private string keyWord;
-    
-    private LanguageController m_languageController;
-    private Text m_text;
-
-    private void Start()
+    [RequireComponent(typeof(Text))]
+    public class SetLocalizedText: MonoBehaviour
     {
-        m_languageController = LanguageController.instance;
-        m_text = GetComponent<Text>();
-        OnSwitchLanguage();
-        SubscribeToLanguageSwitch();
-    }
+        [SerializeField] private string keyWord;
 
-    void OnSwitchLanguage() {
-        if (keyWord != null)
-            m_text.text = LanguageController.instance.words[keyWord];
-    }
+        private LanguageController m_languageController;
+        private Text m_text;
 
-    private void OnDestroy()
-    {
-        UnsubscribeFromLanguageSwitch();
-    }
+        private void Start()
+        {
+            m_languageController = LanguageController.instance;
+            m_text = GetComponent<Text>();
+            OnSwitchLanguage();
+            SubscribeToLanguageSwitch();
+        }
 
-    void SubscribeToLanguageSwitch() {
-        if (m_languageController)
-            m_languageController.onSwitchLanguage += OnSwitchLanguage;
-    }
+        void OnSwitchLanguage() {
+            if (keyWord != null)
+                m_text.text = LanguageController.instance.words[keyWord];
+        }
 
-    void UnsubscribeFromLanguageSwitch() {
-        if (m_languageController)
-            m_languageController.onSwitchLanguage -= OnSwitchLanguage;
+        private void OnDestroy()
+        {
+            UnsubscribeFromLanguageSwitch();
+        }
+
+        void SubscribeToLanguageSwitch() {
+            if (m_languageController)
+                m_languageController.onSwitchLanguage += OnSwitchLanguage;
+        }
+
+        void UnsubscribeFromLanguageSwitch() {
+            if (m_languageController)
+                m_languageController.onSwitchLanguage -= OnSwitchLanguage;
+        }
     }
 }

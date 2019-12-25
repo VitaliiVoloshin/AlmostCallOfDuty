@@ -1,196 +1,210 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-public class GrenadeThrower : MonoBehaviour
+namespace ShooterFeatures
 {
 
-    /*private SpriteMask forceSpriteMask;
-    float testForce;
-    public LineRenderer trajectory;
-    public GameObject targetArea;
-
-    private LineRenderer m_trajectory;
-    private GameObject m_targetArea;
-    Ray cameraRay;
-    RaycastHit cameraRayHit;
-
-    const int ITTERATIONS = 100;
-    public const float MAX_FORCE = 20f;
-    public const float MIN_FORCE = 5f;
-
-
-    bool stop;
-    private void Awake()
+    public class GrenadeThrower: MonoBehaviour
     {
-        stop = false;
-    }
+        public LineRenderer trajectory;
+        public GameObject targetArea;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.G)) {
-            testForce = 0;
+        public float max_force = 20f;
+        public float min_force = 5f;
+        public float trajectoryWidth = 0.4f;
+
+        [SerializeField] private int m_trajectoryDetalization;
+
+        private float m_ThrowForce;
+        private LineRenderer m_trajectory;
+        private GameObject m_targetArea;
+        private Transform m_Transform;
+        private Ray m_cameraRay;
+        private RaycastHit m_cameraRayHit;
+
+        private void Awake()
+        {
+            m_Transform = gameObject.transform;
+            if (m_trajectoryDetalization <= 0) {
+                m_trajectoryDetalization = 50;
+            }
+
+            m_trajectory = Instantiate(trajectory);
+            m_targetArea = Instantiate(targetArea);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.G)) {
+                m_ThrowForce = 0;
+            }
+
+            if (Input.GetKey(KeyCode.G)) {
                 ShowForce();
-            
+
+                if (m_targetArea.activeSelf) {
+                    m_ThrowForce = Vector3.Distance(transform.position, RotationToCursor(transform));
+                }
+
+                if (m_ThrowForce > max_force) {
+                    m_ThrowForce = max_force;
+                }
+                if (m_ThrowForce < min_force) {
+                    m_ThrowForce = min_force;
+                }
+
+                if (m_ThrowForce != 0 && m_targetArea != null) {
+                    CastParabola(m_ThrowForce);
+                } else {
+                    HideForce();
+                }
+            }
+
+            if (Input.GetKeyUp(KeyCode.G)) {
+                Launch(CastParabola(m_ThrowForce));
+                HideForce();
+
+            }
         }
 
-        if (Input.GetKey(KeyCode.G)) {
-            testForce = Vector3.Distance(transform.position,FindObjectOfType<PlayerController>().RotationToCursor(transform));
-
-            if (testForce > MAX_FORCE) {
-                testForce = MAX_FORCE;
-            }
-            if (testForce < MIN_FORCE) {
-                testForce = MIN_FORCE;
-            }
-
-            if (testForce != 0 && m_targetArea!=null)
-            {
-                CastParabola(testForce);
-            }
-        }
-
-        if (Input.GetKeyUp(KeyCode.G)) {
-            Vector3[] traj = new Vector3[CastParabola(testForce).Length];
-            traj = CastParabola(testForce);
-            Launch(testForce,traj);
+        private void OnEnable()
+        {
             HideForce();
-            
         }
-        
 
-
-    }
-
-    private void HideForce()
-    {
-        Destroy(m_trajectory.gameObject);
-        Destroy(m_targetArea);
-    }
-
-
-
-
-
-    void Launch(float force, Vector3[] trajectory)
-    {
-        if (force > 0)
+        private void OnDisable()
         {
-            GameObject grenade = Instantiate(Resources.Load("Grenade"), transform.position, transform.rotation) as GameObject;
-            grenade.GetComponent<Grenade>().trajectory = trajectory;
-            grenade.GetComponent<Grenade>().owner = GetComponentInParent<PlayerController>();
+            HideForce();
         }
-    }
 
-    Vector3[] CastParabola(float range) {
-        Vector3[] point;
-        point = new Vector3[ITTERATIONS];
-        point = MakeTrajectory(point, ITTERATIONS, range, true);
-        return point;
-    }
-
-    Vector3[] RecastParabola(float range) {
-        Vector3[] point;
-        point = new Vector3[ITTERATIONS];
-        point = MakeTrajectory(point, ITTERATIONS, range, false);
-        return point;
-    }
-
-
-    Vector3[] MakeTrajectory(Vector3[] pointPositions, int nubmerOfIterrations, float lenght, bool withRaycast) {
-
-        bool detectRaycast = false;
-        Vector3 raycastPoint = Vector3.zero;
-
-        int numberOnInstances = ITTERATIONS;
-        int instanceCount = numberOnInstances;
-        float i = 0;
-
-        while (instanceCount > 0)
+        public void ShowForce()
         {
-            Vector3 parabolaPoint;
-            Vector3 direction = transform.position + transform.forward * i;
-            direction.y = GameObject.FindGameObjectWithTag("Ground").transform.position.y;
-            Vector3 worldPoint;
-            parabolaPoint = Vector3.zero;
-            parabolaPoint.y = (-Mathf.Pow(i, 2) + lenght * i) / lenght;
-            parabolaPoint += direction;
-            worldPoint = parabolaPoint;
-            pointPositions[numberOnInstances - instanceCount] = worldPoint;
-            i += lenght / numberOnInstances;
-            instanceCount--;
+            if (m_trajectory != null && m_targetArea != null) {
+                m_trajectory.gameObject.SetActive(true);
+                m_targetArea.SetActive(true);
+            }
+        }
 
-            if (withRaycast) {
-                if (!detectRaycast)
-                {
-                    RaycastHit hit;
-                    if (Physics.Raycast(pointPositions[numberOnInstances - instanceCount - 1], transform.forward, out hit, 6f))
-                    {
-                        if (CheckForActiveObject(hit.transform.gameObject))
-                        {
-                            detectRaycast = true;
-                            raycastPoint = pointPositions[numberOnInstances - instanceCount - 1];
+        private void HideForce()
+        {
+            if (m_trajectory != null && m_targetArea != null) {
+                m_trajectory.gameObject.SetActive(false);
+                m_targetArea.SetActive(false);
+            }
+        }
+
+        void Launch(Vector3[] trajectory)
+        {
+            if (trajectory != null) {
+                GameObject grenade = Instantiate(Resources.Load("Grenade"), transform.position, transform.rotation) as GameObject;
+                grenade.GetComponent<Grenade>().trajectory = trajectory;
+                grenade.GetComponent<Grenade>().owner = GetComponentInParent<ActorController>();
+            }
+        }
+
+        Vector3[] CastParabola(float range)
+        {
+            Vector3[] point;
+            point = new Vector3[m_trajectoryDetalization];
+            point = MakeTrajectory(range, true);
+            return point;
+        }
+
+        Vector3[] RecastParabola(float range)
+        {
+            Vector3[] point;
+            point = new Vector3[m_trajectoryDetalization];
+            point = MakeTrajectory(range, false);
+            return point;
+        }
+
+        Vector3[] MakeTrajectory(float lenght, bool withRaycast)
+        {
+            Vector3[] trajectoryPoints = new Vector3[m_trajectoryDetalization];
+            bool detectRaycast = false;
+            Vector3 raycastPoint = Vector3.zero;
+
+            int numberOnInstances = m_trajectoryDetalization;
+            int instanceCount = numberOnInstances;
+            float i = 0;
+
+            while (instanceCount > 0) {
+                Vector3 parabolaPoint;
+                Vector3 direction = transform.position + transform.forward * i;
+                direction.y = GameObject.FindGameObjectWithTag("Ground").transform.position.y;
+                Vector3 worldPoint;
+                parabolaPoint = Vector3.zero;
+                parabolaPoint.y = (-Mathf.Pow(i, 2) + lenght * i) / lenght;
+                parabolaPoint += direction;
+                worldPoint = parabolaPoint;
+                trajectoryPoints[numberOnInstances - instanceCount] = worldPoint;
+                i += lenght / numberOnInstances;
+                instanceCount--;
+
+                if (withRaycast) {
+                    if (!detectRaycast) {
+                        RaycastHit hit;
+                        if (Physics.Raycast(trajectoryPoints[numberOnInstances - instanceCount - 1], transform.forward, out hit, 6f)) {
+                            if (CheckForActiveObject(hit.transform.gameObject)) {
+                                detectRaycast = true;
+                                raycastPoint = trajectoryPoints[numberOnInstances - instanceCount - 1];
+                            }
                         }
                     }
                 }
             }
 
-        }
-        if (withRaycast) {
-            if (detectRaycast)
-            {
-                float lul = Vector3.Distance(transform.position, raycastPoint);
-                Vector3[] redraw = RecastParabola(lul);
-                m_trajectory.SetVertexCount(ITTERATIONS);
-                m_trajectory.SetPositions(redraw);
-                m_trajectory.SetWidth(0.4f, 0.4f);
-                m_targetArea.transform.position = redraw[redraw.Length - 1];
-                return redraw;
-            }
-            else
-            {
-                m_trajectory.SetVertexCount(ITTERATIONS);
-                m_trajectory.SetPositions(pointPositions);
-                m_trajectory.SetWidth(0.4f, 0.4f);
-                m_targetArea.transform.position = pointPositions[pointPositions.Length - 1];
-                return pointPositions;
+            if (withRaycast) {
 
+                if (detectRaycast) {
+                    float lul = Vector3.Distance(transform.position, raycastPoint);
+                    Vector3[] redraw = RecastParabola(lul);
+                    m_trajectory.SetPositions(redraw);
+                    m_targetArea.transform.position = redraw[redraw.Length - 1];
+                    return redraw;
+                } else {
+                    TrajectorySetup();
+                    m_trajectory.SetPositions(trajectoryPoints);
+                    m_targetArea.transform.position = trajectoryPoints[trajectoryPoints.Length - 1];
+                    return trajectoryPoints;
+
+                }
+            } else {
+
+                m_trajectory.SetPositions(trajectoryPoints);
+                if (trajectoryPoints.Length == m_trajectoryDetalization) {
+                    m_targetArea.transform.position = trajectoryPoints[trajectoryPoints.Length - 1];
+                }
+                return trajectoryPoints;
             }
         }
-        else
+
+        void TrajectorySetup()
         {
-            m_trajectory.SetVertexCount(ITTERATIONS);
-            m_trajectory.SetPositions(pointPositions);
-            m_trajectory.SetWidth(0.4f, 0.4f);
-
-            if (pointPositions.Length == ITTERATIONS)
-            {
-                m_targetArea.transform.position = pointPositions[pointPositions.Length - 1];
-            }
-            return pointPositions;
+            m_trajectory.SetVertexCount(m_trajectoryDetalization);
+            m_trajectory.SetWidth(trajectoryWidth, trajectoryWidth);
         }
 
-    }
 
-    bool CheckForActiveObject(GameObject unit) {
-        if (!unit.GetComponent<Bullet>() &&
-                            !unit.GetComponent<PlayerController>() &&
-                            !unit.GetComponent<ManekenController>())
+        bool CheckForActiveObject(GameObject unit)
         {
-            return true;
+            if (!unit.GetComponent<Bullet>() &&
+                !unit.GetComponent<ActorController>() &&
+                !unit.GetComponent<Grenade>()) {
+                return true;
+            } else {
+                return false;
+            }
         }
-        else {
-            return false;
+
+        public Vector3 RotationToCursor(Transform position)
+        {
+            m_cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(m_cameraRay, out m_cameraRayHit)) {
+                Vector3 targetPosition = new Vector3(m_cameraRayHit.point.x, transform.position.y, m_cameraRayHit.point.z);
+                return targetPosition;
+            }
+            return Vector3.zero;
         }
     }
-
-
-
-    public void ShowForce()
-    {
-            m_trajectory = Instantiate(trajectory);
-            m_targetArea = Instantiate(targetArea);
-    }
-    */
 }

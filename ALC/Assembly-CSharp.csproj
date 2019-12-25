@@ -67,14 +67,13 @@
     <Compile Include="Assets\Scripts\ActionJournal\BattleGrounObserver.cs" />
     <Compile Include="Assets\Scripts\Actor\Actor.cs" />
     <Compile Include="Assets\Scripts\Actor\ActorStats.cs" />
-    <Compile Include="Assets\Scripts\Actor\FractionController.cs" />
     <Compile Include="Assets\Scripts\Actor\Player\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\Actor\RespawnController.cs" />
     <Compile Include="Assets\Scripts\Actor\SimpleShooter\SimpleShooter.cs" />
     <Compile Include="Assets\Scripts\Actor\Spawner.cs" />
-    <Compile Include="Assets\Scripts\Actor\StatsController.cs" />
     <Compile Include="Assets\Scripts\Actor\UIHealthBarController.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
+    <Compile Include="Assets\Scripts\GroupControllers\FractionController.cs" />
+    <Compile Include="Assets\Scripts\GroupControllers\RespawnController.cs" />
     <Compile Include="Assets\Scripts\GroupControllers\UnitHolder.cs" />
     <Compile Include="Assets\Scripts\InputController\InputController.cs" />
     <Compile Include="Assets\Scripts\Menu\Language\LanguageController.cs" />

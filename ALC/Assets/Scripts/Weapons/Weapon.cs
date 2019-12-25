@@ -1,90 +1,81 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum WeaponIdentificator
+namespace ShooterFeatures
 {
-    shotgun,
-    automaticRifle, 
-    grenade
-}
-
-public class Weapon : MonoBehaviour
-{
-    public Transform shootPoint;
-    private ShootLogic shootLogic = new ShootLogic();
-    [SerializeField] public WeaponData _weaponData;
-    BattleGrounObserver killJournal;
-    private float m_speed;
-    public float _oneBulletDamage;
-    public Color bulletColor;
-    public ActorController owner;
-    private float m_nextFire;
-    int currentAmmo;
-    int maxAmmo;
-    bool isReloading;
-
-    void Start()
+    public class Weapon: MonoBehaviour
     {
-        killJournal = BattleGrounObserver.instance;
-        shootLogic.shootPoint = shootPoint;
-        currentAmmo = _weaponData.bulletsInMagazine;
-        m_speed = NormilizedShootingSpeed(_weaponData.ShotsPerSecond);
-        m_nextFire = 0;
-        maxAmmo = currentAmmo;
-        bulletColor = BulletColorDependsOnOwner();
-    }
+        public Transform shootPoint;
+        public ActorController owner;
+        public WeaponData _weaponData;
+        public Color bulletColor;
+        public float _oneBulletDamage;
 
-    void AddOwnerStatsToWeapon() {
-        _weaponData.Damage *= owner.stats.damageCaused;
-        float convert = _weaponData.ShotsPerSecond;
-        convert *= owner.stats.attackSpeed;
-        _weaponData.ShotsPerSecond = Mathf.RoundToInt(convert);
-    }
+        private ShootLogic m_ShootLogic = new ShootLogic();
+        private BattleGrounObserver m_KillJournal;
+        private float m_Speed;
+        private float m_NextFire;
+        private int m_CurrentAmmo;
+        private int m_MaxAmmo;
+        private bool m_IsReloading;
 
-    float NormilizedShootingSpeed(float speed)
-    {
-        return 1 / speed;
-    }
-
-    Color BulletColorDependsOnOwner()
-    {
-        if (owner is PlayerController)
+        void Start()
         {
-            return Color.green;
+            m_KillJournal = BattleGrounObserver.instance;
+            m_ShootLogic.shootPoint = shootPoint;
+            m_CurrentAmmo = _weaponData.bulletsInMagazine;
+            m_Speed = NormilizedShootingSpeed(_weaponData.ShotsPerSecond);
+            m_MaxAmmo = m_CurrentAmmo;
+            bulletColor = BulletColorDependsOnOwner();
         }
-        else
-            return Color.red;
-    }
 
-    public void Shoot()
-    {
-        string[] enemies = new string[_weaponData.BulletsPerShoot];
-        if (Time.time > m_nextFire)
+        void AddOwnerStatsToWeapon()
         {
+            _weaponData.Damage *= owner.stats.damageCaused;
+            float convert = _weaponData.ShotsPerSecond;
+            convert *= owner.stats.attackSpeed;
+            _weaponData.ShotsPerSecond = Mathf.RoundToInt(convert);
+        }
 
-            if (isReloading) return;
-            if (currentAmmo < 2)
-            {
-                StartCoroutine(Reload());
+        float NormilizedShootingSpeed(float speed)
+        {
+            return 1 / speed;
+        }
+
+        Color BulletColorDependsOnOwner()
+        {
+            if (owner is PlayerController) {
+                return Color.green;
+            } else
+                return Color.red;
+        }
+
+        public void Shoot()
+        {
+            string[] enemies = new string[_weaponData.BulletsPerShoot];
+            if (Time.time > m_NextFire) {
+                if (m_IsReloading) return;
+                if (m_CurrentAmmo < 1) {
+                    if(this.isActiveAndEnabled)
+                    StartCoroutine(Reload());
+                } else {
+                    enemies = m_ShootLogic.ShootBullets(_weaponData);
+                    m_CurrentAmmo--;
+                }
+                m_NextFire = Time.time + m_Speed;
             }
-            enemies = shootLogic.ShootBullets(_weaponData);
-            currentAmmo--;
-            m_nextFire = Time.time + m_speed;
+        }
+
+        IEnumerator Reload()
+        {
+            m_IsReloading = true;
+            yield return new WaitForSeconds(2f);
+            m_CurrentAmmo = m_MaxAmmo;
+            m_IsReloading = false;
+        }
+        private void OnDisable()
+        {
+            m_IsReloading = false;
         }
     }
-
-    void AddKilledEnemiesToJournal(string[] deadEnemies) {
-        
-    }
-
-    IEnumerator Reload()
-    {
-        isReloading = true;
-        yield return new WaitForSeconds(2f);
-        currentAmmo = maxAmmo;
-        isReloading = false;
-
-    }
-
 }

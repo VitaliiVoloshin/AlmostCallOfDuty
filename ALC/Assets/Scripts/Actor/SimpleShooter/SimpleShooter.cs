@@ -1,22 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class SimpleShooter : ActorController
+namespace ShooterFeatures
 {
-    WeaponController weaponController;
+    public class SimpleShooter: ActorController
+    {
+        private WeaponController m_WeaponController;
 
-    void Awake()
-    {
-        stats.health = 100;
-        weaponController = GetComponentInChildren<WeaponController>();
-        name = transform.gameObject.name;
-    }
-    private void Update()
-    {
-        Death();
-        if (weaponController) {
-            Shoot();
+        void Awake()
+        {
+            stats.health = 100;
+            m_WeaponController = GetComponentInChildren<WeaponController>();
+            name = transform.gameObject.name;
+        }
+        private void Update()
+        {
+            Death();
+            if (m_WeaponController) {
+                Shoot();
+            }
         }
     }
 }

@@ -2,54 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class UIHealthBarController : MonoBehaviour
+
+namespace ShooterFeatures
 {
-    private Camera m_Camera;
-    Image healthBar;
-    float maxHealth;
-    StatsController parentStats;
-    // Start is called before the first frame update
-    Quaternion rotation;
-    void Start()
+    public class UIHealthBarController: MonoBehaviour
     {
-        //parentStats = GetComponentInParent<StatsController>();
-        healthBar = transform.GetChild(1).GetComponent<Image>();
-        m_Camera = Camera.main;
-        //maxHealth = parentStats.health;
-    }
+        public Image healthBar;
+        private Camera m_Camera;
 
-    private void Awake()
-    {
-      rotation = transform.rotation;
-    }
+        private float m_MaxHealth;
+        private Quaternion m_Rotation;
+        private ActorController m_Owner;
 
-    // Update is called once per frame
-
-    private void Update()
-
-    {
-
-        /*if (parentStats != null)
+        void Start()
         {
-           
-            if (parentStats.fraction == UnitStats.Fraction.green)
-                transform.GetChild(1).GetComponent<Image>().color = Color.green;
+            m_Owner = GetComponentInParent<ActorController>();
+            m_Camera = Camera.main;
+            m_MaxHealth = m_Owner.stats.health;
+        }
 
-            if (parentStats.fraction == UnitStats.Fraction.red)
-                transform.GetChild(1).GetComponent<Image>().color = Color.red;
+        private void Awake()
+        {
+            m_Rotation = transform.rotation;
+        }
 
-        }*/
+        private void Update()
 
+        {
+            if (m_Owner != null) {
 
-        /*if (parentStats != null)
-        {           
-            healthBar.fillAmount = parentStats.health / maxHealth;    
-        }*/
-    }
+                if (m_Owner.fraction == Fraction.GreenTeam)
+                    healthBar.color = Color.green;
 
-    void LateUpdate()
-    {
-        transform.rotation = rotation;
-        transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward, m_Camera.transform.rotation * Vector3.up);
+                if (m_Owner.fraction == Fraction.RedTeam)
+                    healthBar.color = Color.red;
+
+            }
+
+            if (m_Owner != null) {
+                healthBar.fillAmount = m_Owner.stats.health / m_MaxHealth;
+            }
+        }
+
+        void LateUpdate()
+        {
+            transform.rotation = m_Rotation;
+            transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward, m_Camera.transform.rotation * Vector3.up);
+        }
     }
 }

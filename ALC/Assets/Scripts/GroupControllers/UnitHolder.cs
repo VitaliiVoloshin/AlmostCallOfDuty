@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class UnitHolder: MonoBehaviour
+namespace ShooterFeatures
 {
-
-    public List<GameObject> units = new List<GameObject>();
-
-    public static UnitHolder instance;
-
-    void Awake()
+    public class UnitHolder: MonoBehaviour
     {
-        instance = this;
+        public List<GameObject> units = new List<GameObject>();
+        public static UnitHolder instance;
+
+        void Awake()
+        {
+            instance = this;
+        }
     }
 }
