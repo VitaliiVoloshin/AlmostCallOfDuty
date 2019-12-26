@@ -12,6 +12,7 @@ namespace ShooterFeatures
         [SerializeField] private InputController input;
         [SerializeField] private float m_MovementSpeedWithShotgun;
         [SerializeField] private float m_MovementSpeedWithAutoRifle;
+
         private Ray m_cameraRay;
         private RaycastHit m_cameraRayHit;
         private KeyCode m_shootbutton;
@@ -23,7 +24,8 @@ namespace ShooterFeatures
             SetUpControls();
         }
 
-        void SetUpControls() {
+        void SetUpControls()
+        {
             m_shootbutton = input.shootButton;
             m_verticalAxis = input.verticalAxis;
             m_horizontalAxis = input.horizontalAxis;
@@ -59,7 +61,8 @@ namespace ShooterFeatures
             } else return 1f;
         }
 
-        public Vector3 RotationToCursor(Transform position) {
+        public Vector3 RotationToCursor(Transform position)
+        {
             m_cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(m_cameraRay, out m_cameraRayHit)) {
                 Vector3 targetPosition = new Vector3(m_cameraRayHit.point.x, transform.position.y, m_cameraRayHit.point.z);
@@ -69,15 +72,16 @@ namespace ShooterFeatures
 
         }
 
-        void Movement(float speed) {
-                Vector3 targetVelocity = new Vector3(Input.GetAxis(m_horizontalAxis), 0, Input.GetAxis(m_verticalAxis));
-                targetVelocity *= speed * 10;
-                Vector3 velocity = GetComponent<Rigidbody>().velocity;
-                Vector3 velocityChange = (targetVelocity - velocity);
-                velocityChange.x = Mathf.Clamp(velocityChange.x, -10, 10);
-                velocityChange.z = Mathf.Clamp(velocityChange.z, -10, 10);
-                velocityChange.y = 0;
-                GetComponent<Rigidbody>().AddForce(velocityChange, ForceMode.VelocityChange);
+        void Movement(float speed)
+        {
+            Vector3 targetVelocity = new Vector3(Input.GetAxis(m_horizontalAxis), 0, Input.GetAxis(m_verticalAxis));
+            targetVelocity *= speed * 10;
+            Vector3 velocity = GetComponent<Rigidbody>().velocity;
+            Vector3 velocityChange = (targetVelocity - velocity);
+            velocityChange.x = Mathf.Clamp(velocityChange.x, -10, 10);
+            velocityChange.z = Mathf.Clamp(velocityChange.z, -10, 10);
+            velocityChange.y = 0;
+            GetComponent<Rigidbody>().AddForce(velocityChange, ForceMode.VelocityChange);
         }
 
         float AngleBetweenTwoPoints(Vector3 a, Vector3 b)

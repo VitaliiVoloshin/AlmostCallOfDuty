@@ -32,7 +32,6 @@ namespace ShooterFeatures
             }
         }
 
-
         public string Identificator {
             get {
                 return m_identificator;

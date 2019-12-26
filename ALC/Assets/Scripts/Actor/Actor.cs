@@ -18,7 +18,7 @@ namespace ShooterFeatures
         protected WeaponController m_weaponController;
 
         private Transform m_Transform;
-        
+
         private void Start()
         {
             AddToUnitHolder(UnitHolder.instance);
@@ -35,7 +35,7 @@ namespace ShooterFeatures
 
         public void Death()
         {
-            if (stats !=null && (stats.health <= 0 || m_Transform.position.y <= -10)) {
+            if (stats != null && (stats.health <= 0 || m_Transform.position.y <= -10)) {
                 gameObject.SetActive(false);
             }
         }
@@ -53,8 +53,8 @@ namespace ShooterFeatures
 
         public void Shoot()
         {
-            if(m_weaponController && stats)
-            m_weaponController.activeWeapon.Shoot();
+            if (m_weaponController && stats)
+                m_weaponController.activeWeapon.Shoot();
         }
     }
 }

@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\Actor\Spawner.cs" />
     <Compile Include="Assets\Scripts\Actor\UIHealthBarController.cs" />
     <Compile Include="Assets\Scripts\BulletPull\Bullet.cs" />
+    <Compile Include="Assets\Scripts\BulletPull\ObjectPooler.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\GroupControllers\FractionController.cs" />
     <Compile Include="Assets\Scripts\GroupControllers\RespawnController.cs" />

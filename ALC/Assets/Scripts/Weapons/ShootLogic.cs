@@ -36,8 +36,12 @@ namespace ShooterFeatures
 
         void BulletInstantiation(Vector3 direction)
         {
-
-            GameObject newBullet = Object.Instantiate(Resources.Load("Bullet"), shootPoint.position, shootPoint.rotation) as GameObject;
+            GameObject newBullet = ObjectPooler.SharedInstance.GetPooledObject();
+            if (newBullet != null) {
+                newBullet.transform.position = shootPoint.transform.position;
+                newBullet.transform.rotation = shootPoint.transform.rotation;
+                newBullet.SetActive(true);
+            }
             newBullet.GetComponent<Bullet>().Direction = direction;
             newBullet.GetComponent<Renderer>().material.color = Color.blue;
         }
