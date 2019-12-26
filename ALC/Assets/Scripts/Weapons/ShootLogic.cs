@@ -25,7 +25,6 @@ namespace ShooterFeatures
         Vector3 GetRandomDirection(Vector2 direction)
         {
             return RandomRayPoint(direction.x, direction.y);
-            //return RandomRayPoint(weapon._spread, weapon._weaponData.ShootingRange);
         }
 
         Vector3 RandomRayPoint(float spread, float range)

@@ -8,8 +8,8 @@ namespace ShooterFeatures
     public class UIHealthBarController: MonoBehaviour
     {
         public Image healthBar;
-        private Camera m_Camera;
 
+        private Camera m_Camera;
         private float m_MaxHealth;
         private Quaternion m_Rotation;
         private ActorController m_Owner;
