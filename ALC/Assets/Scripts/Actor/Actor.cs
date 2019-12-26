@@ -15,7 +15,7 @@ namespace ShooterFeatures
         public Fraction fraction;
 
         [SerializeField] public ActorStats stats;
-        [SerializeField] protected WeaponController m_weaponController;
+        protected WeaponController m_weaponController;
 
         private Transform m_Transform;
         
@@ -23,6 +23,7 @@ namespace ShooterFeatures
         {
             AddToUnitHolder(UnitHolder.instance);
             m_Transform = gameObject.transform;
+            m_weaponController = GetComponentInChildren<WeaponController>();
         }
 
         private void OnDisable()
@@ -34,7 +35,7 @@ namespace ShooterFeatures
 
         public void Death()
         {
-            if (stats.health <= 0 || m_Transform.position.y <= -10) {
+            if (stats !=null && (stats.health <= 0 || m_Transform.position.y <= -10)) {
                 gameObject.SetActive(false);
             }
         }
@@ -52,6 +53,7 @@ namespace ShooterFeatures
 
         public void Shoot()
         {
+            if(m_weaponController && stats)
             m_weaponController.activeWeapon.Shoot();
         }
     }
