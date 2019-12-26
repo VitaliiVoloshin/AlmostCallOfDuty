@@ -10,21 +10,23 @@ namespace ShooterFeatures
         GreenTeam
     }
 
+    [RequireComponent(typeof(ActorStatsController))]
     public abstract class ActorController: MonoBehaviour
     {
+        public string nickname;
         public Fraction fraction;
 
-        [SerializeField] public ActorStats stats;
+        public ActorStatsController stats;
         protected WeaponController m_weaponController;
-
-        private Transform m_Transform;
 
         private void Start()
         {
-            AddToUnitHolder(UnitHolder.instance);
-            m_Transform = gameObject.transform;
             m_weaponController = GetComponentInChildren<WeaponController>();
+            stats = GetComponent<ActorStatsController>();
+            AddToUnitHolder(UnitHolder.instance);
+            nickname = GetRandomNickname();
         }
+
 
         private void OnDisable()
         {
@@ -35,9 +37,10 @@ namespace ShooterFeatures
 
         public void Death()
         {
-            if (stats != null && (stats.health <= 0 || m_Transform.position.y <= -10)) {
-                gameObject.SetActive(false);
-            }
+            if (stats != null)
+                if (stats.health <= 0) {
+                    gameObject.SetActive(false);
+                } else return;
         }
 
         protected void AddToUnitHolder(UnitHolder unitHolder)
@@ -55,6 +58,16 @@ namespace ShooterFeatures
         {
             if (m_weaponController && stats)
                 m_weaponController.activeWeapon.Shoot();
+        }
+
+        string GetRandomNickname() {
+            string[] nicknameParts1 = new string[] { "Ge", "Me", "Ta", "Bo", "Ke", "Ra", "Ne", "Mi" };
+            string[] nicknameParts2 = new string[] { "oo", "ue", "as", "to", "ra", "me", "io", "so" };
+            string[] nicknameParts3 = new string[] { "se", "matt", "lace", "fo", "cake", "end" };
+            string nicknamePart1 = nicknameParts1[Random.Range(0, nicknameParts1.Length)];
+            string nicknamePart2 = nicknameParts2[Random.Range(0, nicknameParts2.Length)];
+            string nicknamePart3 = nicknameParts3[Random.Range(0, nicknameParts3.Length)];
+            return nicknamePart1 + nicknamePart2 + nicknamePart3;
         }
     }
 }

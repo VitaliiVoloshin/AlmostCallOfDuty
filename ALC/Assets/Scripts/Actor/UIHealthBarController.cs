@@ -14,17 +14,18 @@ namespace ShooterFeatures
         private Quaternion m_Rotation;
         private ActorController m_Owner;
 
-        void Start()
-        {
-            m_Owner = GetComponentInParent<ActorController>();
-            m_Camera = Camera.main;
-            m_MaxHealth = m_Owner.stats.health;
-        }
-
         private void Awake()
         {
+            m_Owner = GetComponentInParent<ActorController>();
             m_Rotation = transform.rotation;
         }
+
+        void Start()
+        {
+            m_Camera = Camera.main;
+        }
+
+
 
         private void Update()
 
@@ -40,7 +41,7 @@ namespace ShooterFeatures
             }
 
             if (m_Owner != null) {
-                healthBar.fillAmount = m_Owner.stats.health / m_MaxHealth;
+                healthBar.fillAmount = m_Owner.stats.health / m_Owner.stats.maxHealth;
             }
         }
 

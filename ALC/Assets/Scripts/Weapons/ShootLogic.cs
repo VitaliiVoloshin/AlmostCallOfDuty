@@ -6,20 +6,18 @@ namespace ShooterFeatures
     public class ShootLogic
     {
         public Transform shootPoint;
+        [HideInInspector] public ActorController shooter;
+        [HideInInspector] public Weapon weapon;
 
-        public string[] ShootBullets(WeaponData weaponData)
+        public void ShootBullets(WeaponData weaponData)
         {
-
             int howmany = weaponData.BulletsPerShoot;
-            string[] victums = new string[howmany];
-            int i = 0;
             while (howmany != 0) {
                 Vector3 direction = GetRandomDirection(new Vector2(weaponData.spreadingDegree, weaponData.ShootingRange));
                 BulletInstantiation(direction);
-                victums[i] = SingleBulletEffect(direction, weaponData);
+                SingleBulletEffect(direction, weaponData);
                 howmany--;
             }
-            return null;
         }
 
         Vector3 GetRandomDirection(Vector2 direction)
@@ -46,7 +44,7 @@ namespace ShooterFeatures
             newBullet.GetComponent<Renderer>().material.color = Color.blue;
         }
 
-        string SingleBulletEffect(Vector3 direction, WeaponData weaponData)
+        void SingleBulletEffect(Vector3 direction, WeaponData weaponData)
         {
             RaycastHit hit;
             if (Physics.Raycast(shootPoint.position, direction, out hit)) {
@@ -56,13 +54,13 @@ namespace ShooterFeatures
                     ActorController enemy = hit.transform.GetComponent<ActorController>();
                     if (enemy.stats.health - weaponData.Damage <= 0) {
                         enemy.stats.health -= weaponData.Damage;
-                        return enemy.name;
+                        BattleGrounObserver.instance.AddKill(new KillList { Killer = shooter.nickname, Weapon = weaponData.icon, Victum = enemy.nickname });
+                        enemy.Death();
                     } else {
                         enemy.stats.health -= weaponData.Damage;
                     }
                 }
             }
-            return "";
         }
     }
 }

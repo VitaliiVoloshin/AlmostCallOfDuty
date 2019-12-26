@@ -44,7 +44,6 @@ namespace ShooterFeatures
             Transform point = m_SpawnPoints[Random.Range(0, m_SpawnPoints.Length - 1)].transform;
             m_Player.GetComponent<ActorController>().stats.health = 100;
             m_Player.transform.position = point.position;
-            Debug.Log(m_Player.activeSelf);
             m_Player.SetActive(true);
             respawnUI.SetActive(false);
         }

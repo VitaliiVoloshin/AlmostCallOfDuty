@@ -16,3 +16,4 @@ MonoBehaviour:
   m_attackSpeedMultiplier: 1
   m_damageCausedMultiplier: 1
   m_damageTakenMultiplier: 1
+  m_Health: 100

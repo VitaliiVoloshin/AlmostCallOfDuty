@@ -18,10 +18,12 @@ namespace ShooterFeatures
         private KeyCode m_shootbutton;
         private string m_verticalAxis;
         private string m_horizontalAxis;
+        private Transform m_Transform;
 
         void Awake()
         {
             SetUpControls();
+            m_Transform = gameObject.transform;
         }
 
         void SetUpControls()
@@ -46,7 +48,13 @@ namespace ShooterFeatures
             } else if (Input.GetKey(m_shootbutton)) {
                 Shoot();
             }
-            Death();
+
+            if (m_Transform.position.y < -10) {
+                TakeDamage(stats.health);
+                Death();
+            }
+
+
         }
 
         float MovementSpeedDepensOnActiveWeapon()

@@ -8,6 +8,8 @@ namespace ShooterFeatures
     public class WeaponData: ScriptableObject
     {
         [SerializeField]
+        private Sprite m_Icon;
+        [SerializeField]
         private string m_identificator;
         [SerializeField]
         private int m_shotsPerSecond;
@@ -32,6 +34,11 @@ namespace ShooterFeatures
             }
         }
 
+        public Sprite icon {
+            get {
+                return m_Icon;
+            }
+        }
         public string Identificator {
             get {
                 return m_identificator;

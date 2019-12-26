@@ -1,19 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 namespace ShooterFeatures
 {
 
     public class GrenadeThrower: MonoBehaviour
     {
+
         public LineRenderer trajectory;
         public GameObject targetArea;
-
+        public float grenadeDamage = 50;
         public float max_force = 20f;
         public float min_force = 5f;
         public float trajectoryWidth = 0.4f;
 
         [SerializeField] private int m_trajectoryDetalization;
+        [SerializeField] private Sprite grenadeIcon;
 
         private float m_ThrowForce;
         private LineRenderer m_trajectory;
@@ -97,8 +101,11 @@ namespace ShooterFeatures
         {
             if (trajectory != null) {
                 GameObject grenade = Instantiate(Resources.Load("Grenade"), transform.position, transform.rotation) as GameObject;
-                grenade.GetComponent<Grenade>().trajectory = trajectory;
-                grenade.GetComponent<Grenade>().owner = GetComponentInParent<ActorController>();
+                Grenade grenadeComponent = grenade.GetComponent<Grenade>();
+                grenadeComponent.trajectory = trajectory;
+                grenadeComponent.explotionDamage = grenadeDamage;
+                grenadeComponent.grenadeIcon = grenadeIcon;
+                grenadeComponent.owner = GetComponentInParent<ActorController>();
             }
         }
 

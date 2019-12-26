@@ -52,14 +52,16 @@ namespace ShooterFeatures
 
         public void Shoot()
         {
-            string[] enemies = new string[_weaponData.BulletsPerShoot];
             if (Time.time > m_NextFire) {
                 if (m_IsReloading) return;
                 if (m_CurrentAmmo < 1) {
                     if(this.isActiveAndEnabled)
                     StartCoroutine(Reload());
-                } else {
-                    enemies = m_ShootLogic.ShootBullets(_weaponData);
+                } 
+                else {
+                    m_ShootLogic.shooter = owner;
+                    m_ShootLogic.weapon = this;
+                    m_ShootLogic.ShootBullets(_weaponData);
                     m_CurrentAmmo--;
                 }
                 m_NextFire = Time.time + m_Speed;
